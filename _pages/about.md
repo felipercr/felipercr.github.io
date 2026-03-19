@@ -30,13 +30,13 @@ EE & CS master student pursuing a career in R&D. My main interests are in **𝗰
 My main focus is on studying novel signal processing techniques and their applications in critical environments, such as aviation, banking, radars, imagingand others.
 
 Research interests: 
- • Signal and statistical signal processing
- • Optimization
- • Neural networks / Machine learning / AI
- • Compressive sensing and sparse models 
- • Dictionary learning
- • Time series
- • High performance computing
+ - Signal and statistical signal processing
+ - Optimization
+ - Neural networks / Machine learning / AI
+ - Compressive sensing and sparse models 
+ - Dictionary learning
+ - Time series
+ - High performance computing
 
 Fluent in english, french, portuguese and spanish.
 
