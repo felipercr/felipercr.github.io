@@ -514,10 +514,17 @@ ninja.data = [{
           window.open("https://github.com/felipercr", "_blank");
         },
       },{
+        id: 'social-orcid',
+        title: 'ORCID',
+        section: 'Socials',
+        handler: () => {
+          window.open("https://orcid.org/0009-0000-2437-4742", "_blank");
+        },
+      },{
         id: 'social-whatsapp',
         title: 'whatsapp',
         section: 'Socials',
         handler: () => {
-          window.open("https://wa.me/+55 31 98777-2238", "_blank");
+          window.open("https://wa.me/5531987772238", "_blank");
         },
       },];
