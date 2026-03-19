@@ -50,7 +50,7 @@ cv:
         location: Jyväskylä, Finland
         url: https://www.jyu.fi/en 
         area: Data science and AI
-        studyType: Exchange
+        studyType: Exchange period
         start_date: 2024
         end_date: 2024
         courses: "Artificial intelligence, Machine learning, Data science, Computer vision, Nonlinear optimization."
@@ -59,7 +59,7 @@ cv:
         location: Belo Horizonte, Brazil
         url: https://www.ufmg.br/
         area: Electrical engineering
-        studyType: Master of engineering
+        studyType: Bachelor
         start_date: 2020
         end_date: 2026
         courses: "Signal processing, Analog and digital electronics, Communication systems, Control systems."
