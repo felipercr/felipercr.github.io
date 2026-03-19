@@ -32,7 +32,7 @@ My main interests are in **𝗰𝗼𝗺𝗽𝘂𝘁𝗲𝗿 𝘀𝗰𝗶𝗲𝗻
 
 My main focus is on studying novel signal processing techniques and their applications in critical environments, such as aviation, banking, radars, imagingand others.
 
-### Research interests: 
+### Research interests 
  - Signal and statistical signal processing
  - Optimization
  - Neural networks / Machine learning / AI
@@ -44,5 +44,5 @@ My main focus is on studying novel signal processing techniques and their applic
 ### Languages
 Fluent in english, french, portuguese and spanish.
 
-### Center of interest:
+### Center of interest
 I also play guitar as a hobby 🎸🎶.
