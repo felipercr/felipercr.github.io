@@ -1,6 +1,6 @@
 ---
 layout: default
-permalink: / # era /blog/, mas troquei para / para n dar erro
+permalink: # /blog/
 title: blog
 nav: false
 nav_order: 1
