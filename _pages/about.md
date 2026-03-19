@@ -28,7 +28,6 @@ latest_posts:
 ### Education
 Master degree in computer science at the [Institut Polytechnique de Paris](https://www.ip-paris.fr/) given at [École Polytechnique](https://www.polytechnique.edu/) (Paris, FR), master of engineering at [Télécom SudParis](https://www.telecom-sudparis.eu/) (Paris, FR) and bachelor in electrical engineering (5 years course) at the [Federal University of Minas Gerais](https://www.ufmg.br/) (Belo Horizonte, BR). I also spent a term in the [University of Jyväskylä](https://www.jyu.fi/en) (Jyväskylä, FI) doing master-level courses at the computer science department.
 
-### Interests
 My main interests are in **𝗰𝗼𝗺𝗽𝘂𝘁𝗲𝗿 𝘀𝗰𝗶𝗲𝗻𝗰𝗲** 🌐🚀 (optimization, mathematical programming, high performance computing, ...), **𝘀𝗶𝗴𝗻𝗮𝗹 𝗽𝗿𝗼𝗰𝗲𝘀𝘀𝗶𝗻𝗴** 📡🛰️ (filters, time series, images, radar, sensors, audio...) and the uses of **𝗔𝗜/𝗠𝗟** in these fields 🧠🧩.
 
 My main focus is on studying novel signal processing techniques and their applications in critical environments, such as aviation, banking, radars, imagingand others.
