@@ -1,11 +1,11 @@
 ---
 layout: default
-permalink: /blog/
+permalink: / # era /blog/, mas troquei para / para n dar erro
 title: blog
-nav: true
+nav: false
 nav_order: 1
 pagination:
-  enabled: true
+  enabled: false
   collection: posts
   permalink: /page/:num/
   per_page: 5
