@@ -22,7 +22,7 @@ cv:
 
   sections:
     Education:
-      - institution: **Institut Polytechnique de Paris - École Polytechnique**
+      - institution: Institut Polytechnique de Paris - École Polytechnique
         location: Paris, France
         url: https://www.ip-paris.fr/
         area: Computer science
