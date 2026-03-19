@@ -25,8 +25,8 @@ latest_posts:
   limit: 3 # leave blank to include all the blog posts
 ---
 
-### Education
-Master degree in computer science at the [Institut Polytechnique de Paris](https://www.ip-paris.fr/) given at [École Polytechnique](https://www.polytechnique.edu/) (Paris, FR), master of engineering at [Télécom SudParis](https://www.telecom-sudparis.eu/) (Paris, FR) and bachelor in electrical engineering (5 years course) at the [Federal University of Minas Gerais](https://www.ufmg.br/) (Belo Horizonte, BR). I also spent a term in the [University of Jyväskylä](https://www.jyu.fi/en) (Jyväskylä, FI) doing master-level courses at the computer science department.
+### Bio
+Master's degree in computer science at the [Institut Polytechnique de Paris](https://www.ip-paris.fr/) given at [École Polytechnique](https://www.polytechnique.edu/) (Paris, FR), master of engineering at [Télécom SudParis](https://www.telecom-sudparis.eu/) (Paris, FR), and bachelor in electrical engineering (5 years course) at the [Federal University of Minas Gerais](https://www.ufmg.br/) (Belo Horizonte, BR). I also spent a term in the [University of Jyväskylä](https://www.jyu.fi/en) (Jyväskylä, FI) doing master-level courses at the computer science department.
 
 My main interests are in **𝗰𝗼𝗺𝗽𝘂𝘁𝗲𝗿 𝘀𝗰𝗶𝗲𝗻𝗰𝗲** 🌐🚀 (optimization, mathematical programming, high performance computing, ...), **𝘀𝗶𝗴𝗻𝗮𝗹 𝗽𝗿𝗼𝗰𝗲𝘀𝘀𝗶𝗻𝗴** 📡🛰️ (filters, time series, images, radar, sensors, audio...) and the uses of **𝗔𝗜/𝗠𝗟** in these fields 🧠🧩.
 
