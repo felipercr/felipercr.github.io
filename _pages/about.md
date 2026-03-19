@@ -1,6 +1,6 @@
 ---
 layout: about
-title: about
+title: About
 permalink: /
 subtitle: R&D Engineer - Signal Processing | Computer Science | Applied Mathematics # <a href='#'>Affiliations</a>. Address. Contacts. Motto. Etc.
 
