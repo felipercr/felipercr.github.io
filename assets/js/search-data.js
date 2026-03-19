@@ -31,7 +31,7 @@ ninja.data = [{
             window.location.href = "/publications/";
           },
         },{id: "nav-music",
-          title: "music",
+          title: "Music",
           description: "",
           section: "Navigation",
           handler: () => {
