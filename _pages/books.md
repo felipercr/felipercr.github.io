@@ -1,6 +1,6 @@
 ---
 layout: book-shelf
-title: music
+title: Music
 permalink: /music/
 nav: true
 nav_order: 5
