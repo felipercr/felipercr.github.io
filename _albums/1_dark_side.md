@@ -1,7 +1,5 @@
 ---
 title: The Dark Side of the Moon
-started: 2024-01-15
-cover: /assets/img/albums/dark-side.jpg
+cover: /assets/img/album-covers/dark-side.png
 spotify_url: https://open.spotify.com/album/4LH4d3cOWNNsVCJS7rQHsJ
-status: finished
 ---
