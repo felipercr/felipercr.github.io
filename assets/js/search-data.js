@@ -30,13 +30,6 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/publications/";
           },
-        },{id: "nav-books",
-          title: "Books",
-          description: "",
-          section: "Navigation",
-          handler: () => {
-            window.location.href = "/books/";
-          },
         },{id: "nav-music",
           title: "Music",
           description: "",
@@ -407,7 +400,12 @@ ninja.data = [{
             window.location.href = "/blog/2015/formatting-and-links/";
           
         },
-      },{id: "books-the-godfather",
+      },{id: "albums-the-dark-side-of-the-moon",
+          title: 'The Dark Side of the Moon',
+          description: "",
+          section: "Albums",handler: () => {
+              window.location.href = "/albums/1_dark_side/";
+            },},{id: "books-the-godfather",
           title: 'The Godfather',
           description: "",
           section: "Books",handler: () => {
