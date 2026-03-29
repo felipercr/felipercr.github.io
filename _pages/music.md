@@ -1,9 +1,9 @@
 ---
-layout: book-shelf
+layout: music-shelf
 title: Music
 permalink: /music/
 nav: true
-nav_order: 6
+nav_order: 5
 collection: albums
 ---
 

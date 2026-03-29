@@ -2,9 +2,9 @@
 layout: book-shelf
 title: Books
 permalink: /books/
-nav: true
-nav_order: 5
+nav: false
+nav_order: 6
 collection: books
 ---
 
-> Some albums I love and that made me company during my studies.
+> Some books I love and that made me company during my studies.

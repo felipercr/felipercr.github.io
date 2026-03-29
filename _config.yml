@@ -151,6 +151,8 @@ newsletter:
 # -----------------------------------------------------------------------------
 
 collections:
+  albums:
+    output: false
   books:
     output: true
   news:
