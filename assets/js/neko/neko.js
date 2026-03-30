@@ -25,6 +25,7 @@
     alert: [[-7, -3]],
     scratchSelf: [
       [-5, 0],
+
       [-6, 0],
       [-7, 0],
     ],
@@ -90,7 +91,7 @@
   };
 
   function init() {
-    let nekoFile = "/assets/js/oneko/oneko.gif"
+    let nekoFile = "/assets/js/neko/neko.gif"
     const curScript = document.currentScript
     if (curScript && curScript.dataset.cat) {
       nekoFile = curScript.dataset.cat
