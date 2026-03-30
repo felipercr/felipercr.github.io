@@ -400,11 +400,91 @@ ninja.data = [{
             window.location.href = "/blog/2015/formatting-and-links/";
           
         },
-      },{id: "albums-the-dark-side-of-the-moon",
+      },{id: "albums-around-the-fur",
+          title: 'Around the Fur',
+          description: "",
+          section: "Albums",handler: () => {
+              window.location.href = "/albums/around-the-fur/";
+            },},{id: "albums-audioslave",
+          title: 'Audioslave',
+          description: "",
+          section: "Albums",handler: () => {
+              window.location.href = "/albums/audioslave/";
+            },},{id: "albums-fear-of-a-blank-planet",
+          title: 'Fear of a Blank Planet',
+          description: "",
+          section: "Albums",handler: () => {
+              window.location.href = "/albums/blank-planet/";
+            },},{id: "albums-breakfast-in-america",
+          title: 'Breakfast in America',
+          description: "",
+          section: "Albums",handler: () => {
+              window.location.href = "/albums/breakfast%20copy%2011/";
+            },},{id: "albums-breakfast-in-america",
+          title: 'Breakfast in America',
+          description: "",
+          section: "Albums",handler: () => {
+              window.location.href = "/albums/breakfast%20copy%2012/";
+            },},{id: "albums-breakfast-in-america",
+          title: 'Breakfast in America',
+          description: "",
+          section: "Albums",handler: () => {
+              window.location.href = "/albums/breakfast%20copy/";
+            },},{id: "albums-breakfast-in-america",
+          title: 'Breakfast in America',
+          description: "",
+          section: "Albums",handler: () => {
+              window.location.href = "/albums/breakfast/";
+            },},{id: "albums-clube-da-esquina-i",
+          title: 'Clube da Esquina I',
+          description: "",
+          section: "Albums",handler: () => {
+              window.location.href = "/albums/clube-da-esquina/";
+            },},{id: "albums-the-colour-and-the-shape",
+          title: 'The Colour and the Shape',
+          description: "",
+          section: "Albums",handler: () => {
+              window.location.href = "/albums/colour-and-shape/";
+            },},{id: "albums-continuum",
+          title: 'Continuum',
+          description: "",
+          section: "Albums",handler: () => {
+              window.location.href = "/albums/continuum/";
+            },},{id: "albums-core",
+          title: 'Core',
+          description: "",
+          section: "Albums",handler: () => {
+              window.location.href = "/albums/core/";
+            },},{id: "albums-the-dark-side-of-the-moon",
           title: 'The Dark Side of the Moon',
           description: "",
           section: "Albums",handler: () => {
-              window.location.href = "/albums/1_dark_side/";
+              window.location.href = "/albums/dark-side/";
+            },},{id: "albums-darkfighter",
+          title: 'Darkfighter',
+          description: "",
+          section: "Albums",handler: () => {
+              window.location.href = "/albums/darkfighter/";
+            },},{id: "albums-death-by-rock-and-roll",
+          title: 'Death by Rock and Roll',
+          description: "",
+          section: "Albums",handler: () => {
+              window.location.href = "/albums/death-by-rock/";
+            },},{id: "albums-definitely-maybe",
+          title: 'Definitely Maybe',
+          description: "",
+          section: "Albums",handler: () => {
+              window.location.href = "/albums/definitely/";
+            },},{id: "albums-desintegration",
+          title: 'Desintegration',
+          description: "",
+          section: "Albums",handler: () => {
+              window.location.href = "/albums/desintegration/";
+            },},{id: "albums-dirt",
+          title: 'Dirt',
+          description: "",
+          section: "Albums",handler: () => {
+              window.location.href = "/albums/dirt/";
             },},{id: "books-the-godfather",
           title: 'The Godfather',
           description: "",
