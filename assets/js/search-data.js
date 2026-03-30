@@ -419,11 +419,6 @@ ninja.data = [{
           title: 'Breakfast in America',
           description: "",
           section: "Albums",handler: () => {
-              window.location.href = "/albums/breakfast%20copy/";
-            },},{id: "albums-breakfast-in-america",
-          title: 'Breakfast in America',
-          description: "",
-          section: "Albums",handler: () => {
               window.location.href = "/albums/breakfast/";
             },},{id: "albums-clube-da-esquina-i",
           title: 'Clube da Esquina I',
@@ -534,11 +529,6 @@ ninja.data = [{
           title: 'Kiss Me Kiss Me Kiss Me',
           description: "",
           section: "Albums",handler: () => {
-              window.location.href = "/albums/kiss-me%20copy/";
-            },},{id: "albums-kiss-me-kiss-me-kiss-me",
-          title: 'Kiss Me Kiss Me Kiss Me',
-          description: "",
-          section: "Albums",handler: () => {
               window.location.href = "/albums/kiss-me/";
             },},{id: "albums-loveless",
           title: 'Loveless',
@@ -556,10 +546,15 @@ ninja.data = [{
           section: "Albums",handler: () => {
               window.location.href = "/albums/mezzanine/";
             },},{id: "albums-what-39-s-the-story-morning-glory",
-          title: '(What&amp;#39;s the Story?) Morning Glory',
+          title: '(What&amp;#39;s the Story) Morning Glory?',
           description: "",
           section: "Albums",handler: () => {
               window.location.href = "/albums/morning-glory/";
+            },},{id: "albums-mutter",
+          title: 'Mutter',
+          description: "",
+          section: "Albums",handler: () => {
+              window.location.href = "/albums/mutter/";
             },},{id: "albums-ok-computer",
           title: 'Ok Computer',
           description: "",
@@ -595,11 +590,6 @@ ninja.data = [{
           description: "",
           section: "Albums",handler: () => {
               window.location.href = "/albums/social-cues/";
-            },},{id: "albums-sonne",
-          title: 'Sonne',
-          description: "",
-          section: "Albums",handler: () => {
-              window.location.href = "/albums/sonne/";
             },},{id: "albums-star",
           title: 'Star',
           description: "",
