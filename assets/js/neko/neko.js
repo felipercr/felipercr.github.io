@@ -106,8 +106,8 @@
       }
     }
 
-    nekoPosX = 388.74; 
-    nekoPosY = 127.05;
+    nekoPosX = 390.74; 
+    nekoPosY = 131.05;
     idleAnimation = "sleeping";
     idleAnimationFrame = 0;
     isAwake = false;
