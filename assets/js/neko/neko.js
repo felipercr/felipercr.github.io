@@ -106,20 +106,26 @@
       }
     }
 
-    if (persistPosition) {
-      let storedNeko = JSON.parse(window.localStorage.getItem("oneko"));
-      if (storedNeko !== null) {
-        nekoPosX = storedNeko.nekoPosX;
-        nekoPosY = storedNeko.nekoPosY;
-        mousePosX = storedNeko.mousePosX;
-        mousePosY = storedNeko.mousePosY;
-        frameCount = storedNeko.frameCount;
-        idleTime = storedNeko.idleTime;
-        idleAnimation = storedNeko.idleAnimation;
-        idleAnimationFrame = storedNeko.idleAnimationFrame;
-        nekoEl.style.backgroundPosition = storedNeko.bgPos;
-      }
-    }
+    nekoPosX = 216.16; 
+    nekoPosY = 108.85;
+    idleAnimation = "sleeping";
+    idleAnimationFrame = 0;
+    isAwake = false;
+
+    //if (persistPosition) {
+    //  let storedNeko = JSON.parse(window.localStorage.getItem("oneko"));
+    //  if (storedNeko !== null) {
+    //    nekoPosX = storedNeko.nekoPosX;
+    //    nekoPosY = storedNeko.nekoPosY;
+    //    mousePosX = storedNeko.mousePosX;
+    //    mousePosY = storedNeko.mousePosY;
+    //    frameCount = storedNeko.frameCount;
+    //    idleTime = storedNeko.idleTime;
+    //    idleAnimation = storedNeko.idleAnimation;
+    //    idleAnimationFrame = storedNeko.idleAnimationFrame;
+    //    nekoEl.style.backgroundPosition = storedNeko.bgPos;
+    //  }
+    //}
 
     if (!persistPosition || window.localStorage.getItem("oneko") === null) {
         idleAnimation = "sleeping";
@@ -251,23 +257,36 @@
 
     switch (idleAnimation) {
       case "sleeping":
-        if (idleAnimationFrame < 8) {
-          setSprite("tired", 0);
-          break;
+        //if (idleAnimationFrame < 8) {
+        //  setSprite("tired", 0);
+        //  break;
+        //}
+
+        if (mouseButtonDown && diffY < 32 && diffY > -32 && diffX < 32 && diffX > -32) {
+            setSprite("heart", Math.floor(idleAnimationFrame / 4));
+        } else {
+            // Usa apenas os frames de sono direto (2 frames que alternam)
+            setSprite("sleeping", Math.floor(idleAnimationFrame / 4));
         }
+
+        // Aumentamos o limite para ele não "acordar" sozinho por tempo
+        if (idleAnimationFrame > 999) { 
+            idleAnimationFrame = 0; 
+        }
+        break;
 
         // check diffs to ensure pointer is on sprite - PETTING FUNCTIONALITY
         // Expanded hitbox for easier petting
-        if (mouseButtonDown && diffY < 32 && diffY > -32 && diffX < 32 && diffX > -32) {
-          setSprite("heart", Math.floor(idleAnimationFrame / 4));
-        } else {
-          setSprite("sleeping", Math.floor(idleAnimationFrame / 4));
-        }
+        //if (mouseButtonDown && diffY < 32 && diffY > -32 && diffX < 32 && diffX > -32) {
+        //  setSprite("heart", Math.floor(idleAnimationFrame / 4));
+        //} else {
+        //  setSprite("sleeping", Math.floor(idleAnimationFrame / 4));
+        //}
 
-        if (idleAnimationFrame > 192) {
-          resetIdleAnimation();
-        }
-        break;
+        //if (idleAnimationFrame > 192) {
+        //  resetIdleAnimation();
+        //}
+        //break;
       case "scratchWallN":
       case "scratchWallS":
       case "scratchWallE":
@@ -298,23 +317,16 @@
     const diffY = nekoPosY - mousePosY;
     const distance = Math.sqrt(diffX ** 2 + diffY ** 2);
 
-    // LÓGICA DE ACORDAR:
-    // Se o gato estiver dormindo e você clicar em cima dele (hitbox de 32px)
+    // Se não estiver acordado, ele fica preso no loop de sono
     if (!isAwake) {
-      if (mouseButtonDown && Math.abs(diffX) < 32 && Math.abs(diffY) < 32) {
-        isAwake = true;
-        resetIdleAnimation(); // Limpa o sono para ele começar a agir
-      } else {
-        // Enquanto não acorda, ele apenas executa a função de idle (que mantém o sono)
-        idle(diffX, diffY);
-        return;
-      }
-    }
-
-    // A partir daqui é o comportamento normal de perseguição...
-    if (distance < nekoSpeed || distance < 48) {
-      idle(diffX, diffY);
-      return;
+        // Se clicar no gato, ele acorda
+        if (mouseButtonDown && Math.abs(diffX) < 32 && Math.abs(diffY) < 32) {
+            isAwake = true;
+            resetIdleAnimation();
+        } else {
+            idle(diffX, diffY); // Mantém a animação de sono
+            return; // Impede o resto do código de rodar (não move)
+        }
     }
 
     if (distance < nekoSpeed || distance < 48) {
