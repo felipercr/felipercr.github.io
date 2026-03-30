@@ -18,6 +18,8 @@
   let idleAnimation = null;
   let idleAnimationFrame = 0;
 
+  let isAwake = false;
+
   const nekoSpeed = 10;
   const scratchWallDistance = 96;
   const spriteSets = {
@@ -119,12 +121,17 @@
       }
     }
 
+    if (!persistPosition || window.localStorage.getItem("oneko") === null) {
+        idleAnimation = "sleeping";
+        idleAnimationFrame = 0;
+    }
+
     nekoEl.id = "oneko";
     nekoEl.ariaHidden = true;
     nekoEl.style.width = "32px";
     nekoEl.style.height = "32px";
     nekoEl.style.position = "fixed";
-    nekoEl.style.pointerEvents = "none";
+    nekoEl.style.pointerEvents = "auto";
     nekoEl.style.imageRendering = "pixelated";
     nekoEl.style.left = `${nekoPosX - 16}px`;
     nekoEl.style.top = `${nekoPosY - 16}px`;
@@ -290,6 +297,25 @@
     const diffX = nekoPosX - mousePosX;
     const diffY = nekoPosY - mousePosY;
     const distance = Math.sqrt(diffX ** 2 + diffY ** 2);
+
+    // LÓGICA DE ACORDAR:
+    // Se o gato estiver dormindo e você clicar em cima dele (hitbox de 32px)
+    if (!isAwake) {
+      if (mouseButtonDown && Math.abs(diffX) < 32 && Math.abs(diffY) < 32) {
+        isAwake = true;
+        resetIdleAnimation(); // Limpa o sono para ele começar a agir
+      } else {
+        // Enquanto não acorda, ele apenas executa a função de idle (que mantém o sono)
+        idle(diffX, diffY);
+        return;
+      }
+    }
+
+    // A partir daqui é o comportamento normal de perseguição...
+    if (distance < nekoSpeed || distance < 48) {
+      idle(diffX, diffY);
+      return;
+    }
 
     if (distance < nekoSpeed || distance < 48) {
       idle(diffX, diffY);
