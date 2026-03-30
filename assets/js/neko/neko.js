@@ -360,8 +360,10 @@
     nekoPosX -= (diffX / distance) * nekoSpeed;
     nekoPosY -= (diffY / distance) * nekoSpeed;
 
-    nekoPosX = Math.min(Math.max(16, nekoPosX), window.innerWidth - 16);
-    nekoPosY = Math.min(Math.max(16, nekoPosY), window.innerHeight - 16);
+    //nekoPosX = Math.min(Math.max(16, nekoPosX), window.innerWidth - 16);
+    //nekoPosY = Math.min(Math.max(16, nekoPosY), window.innerHeight - 16);
+    nekoPosX = Math.min(Math.max(16, nekoPosX), document.documentElement.scrollWidth - 16);
+    nekoPosY = Math.min(Math.max(16, nekoPosY), document.documentElement.scrollHeight - 16);
 
     nekoEl.style.left = `${nekoPosX - 16}px`;
     nekoEl.style.top = `${nekoPosY - 16}px`;
