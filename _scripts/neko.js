@@ -1,3 +1,6 @@
+---
+permalink: /assets/js/neko.js
+---
 var neko = document.createElement("div");
 neko.id = "oneko";
 neko.style.width = "32px";
