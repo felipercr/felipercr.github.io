@@ -25,7 +25,7 @@ ninja.data = [{
           },
         },{id: "nav-publications",
           title: "Publications",
-          description: "Publications in reversed chronological order.",
+          description: "My publications.",
           section: "Navigation",
           handler: () => {
             window.location.href = "/publications/";
@@ -419,16 +419,6 @@ ninja.data = [{
           title: 'Breakfast in America',
           description: "",
           section: "Albums",handler: () => {
-              window.location.href = "/albums/breakfast%20copy%2011/";
-            },},{id: "albums-breakfast-in-america",
-          title: 'Breakfast in America',
-          description: "",
-          section: "Albums",handler: () => {
-              window.location.href = "/albums/breakfast%20copy%2012/";
-            },},{id: "albums-breakfast-in-america",
-          title: 'Breakfast in America',
-          description: "",
-          section: "Albums",handler: () => {
               window.location.href = "/albums/breakfast%20copy/";
             },},{id: "albums-breakfast-in-america",
           title: 'Breakfast in America',
@@ -485,6 +475,171 @@ ninja.data = [{
           description: "",
           section: "Albums",handler: () => {
               window.location.href = "/albums/dirt/";
+            },},{id: "albums-eight-arms-to-hold-you",
+          title: 'Eight Arms to Hold You',
+          description: "",
+          section: "Albums",handler: () => {
+              window.location.href = "/albums/eight-arms/";
+            },},{id: "albums-el-camino",
+          title: 'El Camino',
+          description: "",
+          section: "Albums",handler: () => {
+              window.location.href = "/albums/el-camino/";
+            },},{id: "albums-eye-in-the-sky",
+          title: 'Eye in the Sky',
+          description: "",
+          section: "Albums",handler: () => {
+              window.location.href = "/albums/eye-in-the-sky/";
+            },},{id: "albums-facelift",
+          title: 'Facelift',
+          description: "",
+          section: "Albums",handler: () => {
+              window.location.href = "/albums/facelift/";
+            },},{id: "albums-feral-roots",
+          title: 'Feral Roots',
+          description: "",
+          section: "Albums",handler: () => {
+              window.location.href = "/albums/feral-roots/";
+            },},{id: "albums-foo-fighters",
+          title: 'Foo Fighters',
+          description: "",
+          section: "Albums",handler: () => {
+              window.location.href = "/albums/ff/";
+            },},{id: "albums-great-western-valkyre",
+          title: 'Great Western Valkyre',
+          description: "",
+          section: "Albums",handler: () => {
+              window.location.href = "/albums/great-western/";
+            },},{id: "albums-head-on-the-door",
+          title: 'Head on the Door',
+          description: "",
+          section: "Albums",handler: () => {
+              window.location.href = "/albums/head-on-the-door/";
+            },},{id: "albums-himalayan",
+          title: 'Himalayan',
+          description: "",
+          section: "Albums",handler: () => {
+              window.location.href = "/albums/himalayan/";
+            },},{id: "albums-hopes-and-fears",
+          title: 'Hopes and Fears',
+          description: "",
+          section: "Albums",handler: () => {
+              window.location.href = "/albums/hopes-and-fears/";
+            },},{id: "albums-how-did-we-get-so-dark",
+          title: 'How Did We Get So Dark?',
+          description: "",
+          section: "Albums",handler: () => {
+              window.location.href = "/albums/how-get-so-dark/";
+            },},{id: "albums-kiss-me-kiss-me-kiss-me",
+          title: 'Kiss Me Kiss Me Kiss Me',
+          description: "",
+          section: "Albums",handler: () => {
+              window.location.href = "/albums/kiss-me%20copy/";
+            },},{id: "albums-kiss-me-kiss-me-kiss-me",
+          title: 'Kiss Me Kiss Me Kiss Me',
+          description: "",
+          section: "Albums",handler: () => {
+              window.location.href = "/albums/kiss-me/";
+            },},{id: "albums-loveless",
+          title: 'Loveless',
+          description: "",
+          section: "Albums",handler: () => {
+              window.location.href = "/albums/loveless/";
+            },},{id: "albums-meteora",
+          title: 'Meteora',
+          description: "",
+          section: "Albums",handler: () => {
+              window.location.href = "/albums/meteora/";
+            },},{id: "albums-mezzanine",
+          title: 'Mezzanine',
+          description: "",
+          section: "Albums",handler: () => {
+              window.location.href = "/albums/mezzanine/";
+            },},{id: "albums-what-39-s-the-story-morning-glory",
+          title: '(What&amp;#39;s the Story?) Morning Glory',
+          description: "",
+          section: "Albums",handler: () => {
+              window.location.href = "/albums/morning-glory/";
+            },},{id: "albums-ok-computer",
+          title: 'Ok Computer',
+          description: "",
+          section: "Albums",handler: () => {
+              window.location.href = "/albums/ok-computer/";
+            },},{id: "albums-pet-your-friends",
+          title: 'Pet Your Friends',
+          description: "",
+          section: "Albums",handler: () => {
+              window.location.href = "/albums/pet-friends/";
+            },},{id: "albums-reeling",
+          title: 'Reeling',
+          description: "",
+          section: "Albums",handler: () => {
+              window.location.href = "/albums/reeling/";
+            },},{id: "albums-romance",
+          title: 'Romance',
+          description: "",
+          section: "Albums",handler: () => {
+              window.location.href = "/albums/romance/";
+            },},{id: "albums-royal-blood",
+          title: 'Royal Blood',
+          description: "",
+          section: "Albums",handler: () => {
+              window.location.href = "/albums/royal-blood/";
+            },},{id: "albums-siamese-dream",
+          title: 'Siamese Dream',
+          description: "",
+          section: "Albums",handler: () => {
+              window.location.href = "/albums/siamese-dream/";
+            },},{id: "albums-social-cues",
+          title: 'Social Cues',
+          description: "",
+          section: "Albums",handler: () => {
+              window.location.href = "/albums/social-cues/";
+            },},{id: "albums-sonne",
+          title: 'Sonne',
+          description: "",
+          section: "Albums",handler: () => {
+              window.location.href = "/albums/sonne/";
+            },},{id: "albums-star",
+          title: 'Star',
+          description: "",
+          section: "Albums",handler: () => {
+              window.location.href = "/albums/star/";
+            },},{id: "albums-super-extra-gravity",
+          title: 'Super Extra Gravity',
+          description: "",
+          section: "Albums",handler: () => {
+              window.location.href = "/albums/super-extra-gravity/";
+            },},{id: "albums-the-bends",
+          title: 'The Bends',
+          description: "",
+          section: "Albums",handler: () => {
+              window.location.href = "/albums/the-bends/";
+            },},{id: "albums-tinderbox",
+          title: 'Tinderbox',
+          description: "",
+          section: "Albums",handler: () => {
+              window.location.href = "/albums/tinderbox/";
+            },},{id: "albums-twilight",
+          title: 'Twilight',
+          description: "",
+          section: "Albums",handler: () => {
+              window.location.href = "/albums/twilight/";
+            },},{id: "albums-wasting-light",
+          title: 'Wasting Light',
+          description: "",
+          section: "Albums",handler: () => {
+              window.location.href = "/albums/wasting-light/";
+            },},{id: "albums-wish",
+          title: 'Wish',
+          description: "",
+          section: "Albums",handler: () => {
+              window.location.href = "/albums/wish/";
+            },},{id: "albums-zeit",
+          title: 'Zeit',
+          description: "",
+          section: "Albums",handler: () => {
+              window.location.href = "/albums/zeit/";
             },},{id: "books-the-godfather",
           title: 'The Godfather',
           description: "",
