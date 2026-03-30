@@ -7,9 +7,6 @@ layout: page
   {% assign collection = site[page.collection] %}
   {% if collection and collection.size > 0 %}
     <ul>
-    {% comment %}
-    {% for item in collection reversed %}
-    {% endcomment %}
     {% for item in collection %}
       <figure class="cover">
         {% if item.spotify_url %}
