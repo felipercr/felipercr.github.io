@@ -1,5 +1,5 @@
 ---
-title: (What's the Story?) Morning Glory
+title: (What's the Story) Morning Glory?
 cover: /assets/img/album_covers/morning-glory.png
-spotify_url: 
+spotify_url: https://open.spotify.com/album/1VW1MFNstaJuygaoTPkdCk
 ---
