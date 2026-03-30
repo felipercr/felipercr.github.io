@@ -106,7 +106,7 @@
       }
     }
 
-    nekoPosX = 390.74; 
+    nekoPosX = 393.74; 
     nekoPosY = 131.05;
     idleAnimation = "sleeping";
     idleAnimationFrame = 0;
@@ -148,8 +148,10 @@
     document.body.appendChild(nekoEl);
 
     document.addEventListener("mousemove", function (event) {
-      mousePosX = event.clientX;
-      mousePosY = event.clientY;
+      //mousePosX = event.clientX;
+      //mousePosY = event.clientY;
+      mousePosX = event.clientX + window.pageXOffset;
+      mousePosY = event.clientY + window.pageYOffset;
     });
 
     document.addEventListener("mousedown", toggleMouseState);
