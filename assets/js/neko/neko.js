@@ -106,8 +106,8 @@
       }
     }
 
-    nekoPosX = 216.16; 
-    nekoPosY = 108.85;
+    nekoPosX = 378.74; 
+    nekoPosY = 117.05;
     idleAnimation = "sleeping";
     idleAnimationFrame = 0;
     isAwake = false;
@@ -136,7 +136,7 @@
     nekoEl.ariaHidden = true;
     nekoEl.style.width = "32px";
     nekoEl.style.height = "32px";
-    nekoEl.style.position = "fixed";
+    nekoEl.style.position = "absolute";
     nekoEl.style.pointerEvents = "auto";
     nekoEl.style.imageRendering = "pixelated";
     nekoEl.style.left = `${nekoPosX - 16}px`;
