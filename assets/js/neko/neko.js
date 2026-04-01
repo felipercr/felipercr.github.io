@@ -224,8 +224,8 @@
     // r.top é a distância do elemento até o TOPO DA JANELA (viewport).
     // window.scrollY é o quanto a página já desceu.
     // A soma dos dois é a posição fixa no DOCUMENTO.
-    const absoluteTop = r.top + window.scrollY + 30;
-    const absoluteLeft = (boldSpan ? r.right + 10 : r.left + 20) + window.scrollX + 200;
+    const absoluteTop = r.top + window.scrollY + 20;
+    const absoluteLeft = (boldSpan ? r.right + 10 : r.left + 20) + window.scrollX + 185;
 
     nekoPosX = absoluteLeft;
     nekoPosY = absoluteTop + 5; // +5 para alinhar visualmente com o texto
