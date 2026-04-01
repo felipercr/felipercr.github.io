@@ -107,13 +107,31 @@
     }
 
     // Escolhe elemento alvo: navbar brand (site title) primeiro, depois h1.post-title
-    const targetElement = document.querySelector('.navbar-brand.title') || document.querySelector('h1.post-title');
+    const navbarBrand = document.querySelector('.navbar-brand.title');
+    const postTitle = document.querySelector('h1.post-title');
+    const targetElement = navbarBrand || postTitle;
     if (targetElement) {
-      const rect = targetElement.getBoundingClientRect();
-      console.log('Neko anchor target:', (targetElement.className || targetElement.tagName), rect);
-      // Posiciona o neko próximo ao final do elemento (direita), levando em conta scroll
-      nekoPosX = rect.right + 10 + window.pageXOffset;
-      nekoPosY = rect.top + rect.height / 2 + window.pageYOffset;
+      // Se for o h1.post-title, preferimos o span em negrito (primeiro nome) quando disponível;
+      // caso contrário usamos a borda esquerda do título para não ficar preso na extremidade direita.
+      if (targetElement.matches && targetElement.matches('h1.post-title')) {
+        const boldSpan = targetElement.querySelector('.font-weight-bold');
+        if (boldSpan) {
+          const r = boldSpan.getBoundingClientRect();
+          console.log('Neko anchor target: bold span in post-title', r);
+          nekoPosX = r.right + 6 + window.pageXOffset; // ligeiro espaçamento ao lado do primeiro nome
+          nekoPosY = r.top + r.height / 2 + window.pageYOffset;
+        } else {
+          const r = targetElement.getBoundingClientRect();
+          console.log('Neko anchor target: post-title (using left)', r);
+          nekoPosX = r.left + 10 + window.pageXOffset; // usar a borda esquerda do título
+          nekoPosY = r.top + r.height / 2 + window.pageYOffset;
+        }
+      } else {
+        const r = targetElement.getBoundingClientRect();
+        console.log('Neko anchor target: navbar-brand.title', r);
+        nekoPosX = r.right + 10 + window.pageXOffset;
+        nekoPosY = r.top + r.height / 2 + window.pageYOffset;
+      }
     } else {
       // Fallback se não encontrar o elemento
       nekoPosX = 203.74;
@@ -381,10 +399,4 @@
     nekoEl.style.top = `${nekoPosY - 16}px`;
   }
 
-  // Initialize after DOM ready so the header/title element exists.
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', function() { setTimeout(init, 0); });
-  } else {
-    setTimeout(init, 0);
-  }
 })();
