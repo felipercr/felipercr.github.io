@@ -185,24 +185,29 @@
   }
 
   function repositionToAnchor() {
-  const targetElement = document.querySelector('h1.post-title');
-  if (targetElement) {
-    const boldSpan = targetElement.querySelector('.font-weight-bold');
-    const target = boldSpan || targetElement; // Usa o span se existir, senão o h1
-    const r = target.getBoundingClientRect();
-
-    // Se houver o span negrito, usamos o r.right. 
-    // Se for o h1 inteiro, usamos r.left + um offset fixo.
-    nekoPosX = (boldSpan ? r.right + 10 : r.left + 20) + window.pageXOffset;
-
-    // A MUDANÇA: Em vez de r.height / 2, usamos um offset fixo do topo.
-    // Isso garante que, mesmo que o h1 cresça para baixo, o topo permanece estável.
-    nekoPosY = r.top + 10 + window.pageYOffset; 
+      const targetElement = document.querySelector('h1.post-title');
+      if (targetElement) {
+          const boldSpan = targetElement.querySelector('.font-weight-bold');
+          if (boldSpan) {
+              const r = boldSpan.getBoundingClientRect();
+              nekoPosX = r.right + 6 + window.pageXOffset;
+              nekoPosY = r.top + r.height / 2 + window.pageYOffset;
+          } else {
+              const r = targetElement.getBoundingClientRect();
+              //nekoPosX = r.left + 210 + window.pageXOffset;
+              //nekoPosY = r.top + r.height / 2 + window.pageYOffset;
+              nekoPosX = r.left + 210;
+              nekoPosY = r.top + 100;
+          }
+      } else {
+          nekoPosX = 203.74;
+          nekoPosY = 131.05;
+      }
+      
+      // Atualiza o elemento visual imediatamente
+      nekoEl.style.left = `${nekoPosX - 16}px`;
+      nekoEl.style.top = `${nekoPosY - 16}px`;
   }
-  
-  nekoEl.style.left = `${nekoPosX - 16}px`;
-  nekoEl.style.top = `${nekoPosY - 16}px`;
-}
 
   function toggleMouseState(e) {
     var flags = e.buttons !== undefined ? e.buttons : e.which;
