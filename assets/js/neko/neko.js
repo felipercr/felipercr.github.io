@@ -162,6 +162,10 @@
       }
     });
 
+    window.addEventListener("scroll", () => {
+      if (!isAwake) window.requestAnimationFrame(repositionToAnchor);
+    }, { passive: true });
+
     document.body.appendChild(nekoEl);
 
     window.addEventListener("resize", () => {
@@ -211,11 +215,11 @@
       const scrollX = window.pageXOffset || document.documentElement.scrollLeft;
       const scrollY = window.pageYOffset || document.documentElement.scrollTop;
 
-      nekoPosX = (boldSpan ? r.right + 10 : r.left + 20) + scrollX;
+      nekoPosX = (boldSpan ? r.right + 205 : r.left + 20) + scrollX;
       
       // Usamos o r.top (topo do elemento) + um ajuste fixo. 
       // Se ele "sobe" no reload, pode ser que o r.top esteja sendo pego antes do scroll do browser resetar.
-      nekoPosY = r.top + scrollY; 
+      nekoPosY = r.top + 20; 
     }
     
     nekoEl.style.left = `${nekoPosX - 16}px`;
