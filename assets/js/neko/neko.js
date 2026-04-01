@@ -197,7 +197,7 @@
               //nekoPosX = r.left + 210 + window.pageXOffset;
               //nekoPosY = r.top + r.height / 2 + window.pageYOffset;
               nekoPosX = r.left + 210;
-              nekoPosY = r.top + 100;
+              nekoPosY = r.top + 20;
           }
       } else {
           nekoPosX = 203.74;
