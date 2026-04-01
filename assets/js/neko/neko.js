@@ -121,21 +121,6 @@
     idleAnimationFrame = 0;
     isAwake = false;
 
-    //if (persistPosition) {
-    //  let storedNeko = JSON.parse(window.localStorage.getItem("oneko"));
-    //  if (storedNeko !== null) {
-    //    nekoPosX = storedNeko.nekoPosX;
-    //    nekoPosY = storedNeko.nekoPosY;
-    //    mousePosX = storedNeko.mousePosX;
-    //    mousePosY = storedNeko.mousePosY;
-    //    frameCount = storedNeko.frameCount;
-    //    idleTime = storedNeko.idleTime;
-    //    idleAnimation = storedNeko.idleAnimation;
-    //    idleAnimationFrame = storedNeko.idleAnimationFrame;
-    //    nekoEl.style.backgroundPosition = storedNeko.bgPos;
-    //  }
-    //}
-
     if (!persistPosition || window.localStorage.getItem("oneko") === null) {
         idleAnimation = "sleeping";
         idleAnimationFrame = 0;
@@ -165,6 +150,9 @@
     window.addEventListener("scroll", () => {
       if (!isAwake) window.requestAnimationFrame(repositionToAnchor);
     }, { passive: true });
+
+    const initialSprite = spriteSets["sleeping"][0];
+    nekoEl.style.backgroundPosition = `${initialSprite[0] * 32}px ${initialSprite[1] * 32}px`;
 
     document.body.appendChild(nekoEl);
 
@@ -273,7 +261,7 @@
   function idle(diffX, diffY) {
     idleTime += 1;
 
-    // every ~ 20 seconds
+    // every ~ 5 seconds
     if (
       idleTime > 10 &&
       Math.floor(Math.random() * 50) == 0 &&
