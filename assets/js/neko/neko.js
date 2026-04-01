@@ -164,6 +164,12 @@
 
     document.body.appendChild(nekoEl);
 
+    window.addEventListener("resize", () => {
+        // Usamos requestAnimationFrame para garantir que o cálculo 
+        // acompanhe a renderização do browser sem atrasos (lag)
+        window.requestAnimationFrame(repositionToAnchor);
+    });
+
     document.addEventListener("mousemove", function (event) {
       //mousePosX = event.clientX;
       //mousePosY = event.clientY;
