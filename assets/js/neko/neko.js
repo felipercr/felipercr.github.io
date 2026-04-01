@@ -92,6 +92,43 @@
     ],
   };
 
+  // Anchor settings: keep neko fixed next to the page title
+  let anchorToTitle = true;
+  let anchorX = 32;
+  let anchorY = 32;
+  function updateAnchorPosition() {
+    const postTitle = document.querySelector('h1.post-title');
+    if (postTitle) {
+      const boldSpan = postTitle.querySelector('.font-weight-bold');
+      if (boldSpan) {
+        const r = boldSpan.getBoundingClientRect();
+        anchorX = r.right + 6 + window.pageXOffset;
+        anchorY = r.top + r.height / 2 + window.pageYOffset;
+      } else {
+        const r = postTitle.getBoundingClientRect();
+        anchorX = r.left + 10 + window.pageXOffset;
+        anchorY = r.top + r.height / 2 + window.pageYOffset;
+      }
+    } else {
+      anchorX = 203.74;
+      anchorY = 131.05;
+    }
+    if (nekoEl && nekoEl.style) {
+      nekoPosX = anchorX;
+      nekoPosY = anchorY;
+      nekoEl.style.left = `${nekoPosX - 16}px`;
+      nekoEl.style.top = `${nekoPosY - 16}px`;
+    }
+
+    // Inicializa após DOM pronto para garantir que o título exista
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', function() { setTimeout(init, 0); });
+    } else {
+      setTimeout(init, 0);
+    }
+
+  }
+  
   function init() {
     let nekoFile = "/assets/js/neko/neko.gif"
     const curScript = document.currentScript
@@ -335,6 +372,43 @@
 
   function frame() {
     frameCount += 1;
+
+    // If anchored, keep neko fixed at anchorX/anchorY and only run idle/petting logic
+    if (anchorToTitle) {
+      // Try to keep anchor fresh (in case resize/scroll events missed)
+      updateAnchorPosition();
+      const diffX = anchorX - mousePosX;
+      const diffY = anchorY - mousePosY;
+      const distance = Math.sqrt(diffX ** 2 + diffY ** 2);
+
+      // Sleep/wake logic still applies
+      if (!isAwake) {
+        if (mouseButtonDown && Math.abs(diffX) < 32 && Math.abs(diffY) < 32) {
+          isAwake = true;
+          resetIdleAnimation();
+        } else {
+          idle(diffX, diffY);
+          nekoPosX = anchorX;
+          nekoPosY = anchorY;
+          nekoEl.style.left = `${nekoPosX - 16}px`;
+          nekoEl.style.top = `${nekoPosY - 16}px`;
+          return;
+        }
+      }
+
+      if (distance < nekoSpeed || distance < 48) {
+        idle(diffX, diffY);
+      } else {
+        idle(diffX, diffY);
+      }
+
+      nekoPosX = anchorX;
+      nekoPosY = anchorY;
+      nekoEl.style.left = `${nekoPosX - 16}px`;
+      nekoEl.style.top = `${nekoPosY - 16}px`;
+      return;
+    }
+
     const diffX = nekoPosX - mousePosX;
     const diffY = nekoPosY - mousePosY;
     const distance = Math.sqrt(diffX ** 2 + diffY ** 2);
