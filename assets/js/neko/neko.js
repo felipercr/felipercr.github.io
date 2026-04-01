@@ -169,10 +169,20 @@
     document.body.appendChild(nekoEl);
 
     window.addEventListener("resize", () => {
-        // Usamos requestAnimationFrame para garantir que o cálculo 
-        // acompanhe a renderização do browser sem atrasos (lag)
-        window.requestAnimationFrame(repositionToAnchor);
+      if (!isAwake) window.requestAnimationFrame(repositionToAnchor);
     });
+
+    window.addEventListener("scroll", () => {
+      if (!isAwake) window.requestAnimationFrame(repositionToAnchor);
+    }, { passive: true });
+
+    repositionToAnchor();
+
+    window.addEventListener("load", () => {
+      repositionToAnchor();
+    });
+
+    setTimeout(repositionToAnchor, 200);
 
     document.addEventListener("mousemove", function (event) {
       //mousePosX = event.clientX;
@@ -205,26 +215,24 @@
 
   function repositionToAnchor() {
     const targetElement = document.querySelector('h1.post-title');
-    if (targetElement) {
-      const boldSpan = targetElement.querySelector('.font-weight-bold');
-      const target = boldSpan || targetElement;
-      const r = target.getBoundingClientRect();
+    if (!targetElement || isAwake) return; // Não move se estiver acordado
 
-      // r.left e r.top são relativos à janela. 
-      // Somamos o scroll atual para ter a posição absoluta no documento.
-      const scrollX = window.pageXOffset || document.documentElement.scrollLeft;
-      const scrollY = window.pageYOffset || document.documentElement.scrollTop;
+    const boldSpan = targetElement.querySelector('.font-weight-bold');
+    const target = boldSpan || targetElement;
+    const r = target.getBoundingClientRect();
 
-      nekoPosX = (boldSpan ? r.right + 10 : r.left + 20) + scrollX + 205;
-      
-      // Usamos o r.top (topo do elemento) + um ajuste fixo. 
-      // Se ele "sobe" no reload, pode ser que o r.top esteja sendo pego antes do scroll do browser resetar.
-      nekoPosY = r.top + scrollY + 30; 
-    }
-    
+    // r.top é a distância do elemento até o TOPO DA JANELA (viewport).
+    // window.scrollY é o quanto a página já desceu.
+    // A soma dos dois é a posição fixa no DOCUMENTO.
+    const absoluteTop = r.top + window.scrollY + 30;
+    const absoluteLeft = (boldSpan ? r.right + 10 : r.left + 20) + window.scrollX + 200;
+
+    nekoPosX = absoluteLeft;
+    nekoPosY = absoluteTop + 5; // +5 para alinhar visualmente com o texto
+
     nekoEl.style.left = `${nekoPosX - 16}px`;
     nekoEl.style.top = `${nekoPosY - 16}px`;
-  }
+}
 
   function toggleMouseState(e) {
     var flags = e.buttons !== undefined ? e.buttons : e.which;
