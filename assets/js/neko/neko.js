@@ -110,7 +110,7 @@
     const targetElement = document.querySelector('.navbar-brand.title') || document.querySelector('h1.post-title');
     if (targetElement) {
       const rect = targetElement.getBoundingClientRect();
-      console.debug('Neko anchor target:', (targetElement.className || targetElement.tagName), rect);
+      console.log('Neko anchor target:', (targetElement.className || targetElement.tagName), rect);
       // Posiciona o neko próximo ao final do elemento (direita), levando em conta scroll
       nekoPosX = rect.right + 10 + window.pageXOffset;
       nekoPosY = rect.top + rect.height / 2 + window.pageYOffset;
@@ -381,5 +381,10 @@
     nekoEl.style.top = `${nekoPosY - 16}px`;
   }
 
-  init();
+  // Initialize after DOM ready so the header/title element exists.
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function() { setTimeout(init, 0); });
+  } else {
+    setTimeout(init, 0);
+  }
 })();
