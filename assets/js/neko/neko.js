@@ -102,12 +102,12 @@
       const boldSpan = postTitle.querySelector('.font-weight-bold');
       if (boldSpan) {
         const r = boldSpan.getBoundingClientRect();
-        anchorX = r.right + 6 + window.pageXOffset;
-        anchorY = r.top + r.height / 2 + window.pageYOffset;
+        anchorX = r.right + 6;
+        anchorY = r.top + r.height / 2;
       } else {
         const r = postTitle.getBoundingClientRect();
-        anchorX = r.left + 10 + window.pageXOffset;
-        anchorY = r.top + r.height / 2 + window.pageYOffset;
+        anchorX = r.left + 10;
+        anchorY = r.top + r.height / 2;
       }
     } else {
       anchorX = 203.74;
@@ -120,11 +120,11 @@
       nekoEl.style.top = `${nekoPosY - 16}px`;
     }
 
-    // Inicializa após DOM pronto para garantir que o título exista
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', function() { setTimeout(init, 0); });
-    } else {
-      setTimeout(init, 0);
+    if (nekoEl && nekoEl.style) {
+      nekoPosX = anchorX;
+      nekoPosY = anchorY;
+      nekoEl.style.left = `${nekoPosX - 16}px`;
+      nekoEl.style.top = `${nekoPosY - 16}px`;
     }
 
   }
@@ -143,27 +143,8 @@
       }
     }
 
-    const targetElement = document.querySelector('h1.post-title');
-    if (targetElement) {
-      // Se for o h1.post-title, preferimos o span em negrito (primeiro nome) quando disponível;
-      // caso contrário usamos a borda esquerda do título para não ficar preso na extremidade direita.
-        const boldSpan = targetElement.querySelector('.font-weight-bold');
-        if (boldSpan) {
-          const r = boldSpan.getBoundingClientRect();
-          console.log('Neko anchor target: bold span in post-title', r);
-          nekoPosX = r.right + 6 + window.pageXOffset; // ligeiro espaçamento ao lado do primeiro nome
-          nekoPosY = r.top + r.height / 2 + window.pageYOffset;
-        } else {
-          const r = targetElement.getBoundingClientRect();
-          console.log('Neko anchor target: post-title (using left)', r);
-          nekoPosX = r.left + 200 + window.pageXOffset; // usar a borda esquerda do título
-          nekoPosY = r.top + r.height / 2 + window.pageYOffset;
-        }
-    } else {
-      // Fallback se não encontrar o elemento
-      nekoPosX = 203.74;
-      nekoPosY = 131.05;
-    }
+    // compute anchor once; updateAnchorPosition will set `nekoPosX/Y`
+    updateAnchorPosition();
     
     idleAnimation = "sleeping";
     idleAnimationFrame = 0;
@@ -193,7 +174,7 @@
     nekoEl.ariaHidden = true;
     nekoEl.style.width = "32px";
     nekoEl.style.height = "32px";
-    nekoEl.style.position = "absolute";
+    nekoEl.style.position = "fixed";
     nekoEl.style.pointerEvents = "auto";
     nekoEl.style.imageRendering = "pixelated";
     nekoEl.style.left = `${nekoPosX - 16}px`;
@@ -204,11 +185,23 @@
 
     document.body.appendChild(nekoEl);
 
+    // initialize anchored position and attach resize/scroll handlers
+    updateAnchorPosition();
+    function debounce(fn, wait) {
+      let t;
+      return function(...args) {
+        clearTimeout(t);
+        t = setTimeout(() => fn.apply(this, args), wait);
+      };
+    }
+    const debouncedUpdate = debounce(updateAnchorPosition, 80);
+    window.addEventListener('resize', debouncedUpdate);
+    window.addEventListener('scroll', debouncedUpdate, { passive: true });
+    window.addEventListener('orientationchange', debouncedUpdate);
+
     document.addEventListener("mousemove", function (event) {
-      //mousePosX = event.clientX;
-      //mousePosY = event.clientY;
-      mousePosX = event.clientX + window.pageXOffset;
-      mousePosY = event.clientY + window.pageYOffset;
+      mousePosX = event.clientX;
+      mousePosY = event.clientY;
     });
 
     document.addEventListener("mousedown", toggleMouseState);
@@ -375,8 +368,7 @@
 
     // If anchored, keep neko fixed at anchorX/anchorY and only run idle/petting logic
     if (anchorToTitle) {
-      // Try to keep anchor fresh (in case resize/scroll events missed)
-      updateAnchorPosition();
+      // Anchor position updated via resize/scroll handlers (debounced)
       const diffX = anchorX - mousePosX;
       const diffY = anchorY - mousePosY;
       const distance = Math.sqrt(diffX ** 2 + diffY ** 2);
