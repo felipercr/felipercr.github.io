@@ -106,14 +106,10 @@
       }
     }
 
-    // Escolhe elemento alvo: navbar brand (site title) primeiro, depois h1.post-title
-    const navbarBrand = document.querySelector('.navbar-brand.title');
-    const postTitle = document.querySelector('h1.post-title');
-    const targetElement = navbarBrand || postTitle;
+    const targetElement = document.querySelector('h1.post-title');
     if (targetElement) {
       // Se for o h1.post-title, preferimos o span em negrito (primeiro nome) quando disponível;
       // caso contrário usamos a borda esquerda do título para não ficar preso na extremidade direita.
-      if (targetElement.matches && targetElement.matches('h1.post-title')) {
         const boldSpan = targetElement.querySelector('.font-weight-bold');
         if (boldSpan) {
           const r = boldSpan.getBoundingClientRect();
@@ -126,12 +122,6 @@
           nekoPosX = r.left + 10 + window.pageXOffset; // usar a borda esquerda do título
           nekoPosY = r.top + r.height / 2 + window.pageYOffset;
         }
-      } else {
-        const r = targetElement.getBoundingClientRect();
-        console.log('Neko anchor target: navbar-brand.title', r);
-        nekoPosX = r.right + 10 + window.pageXOffset;
-        nekoPosY = r.top + r.height / 2 + window.pageYOffset;
-      }
     } else {
       // Fallback se não encontrar o elemento
       nekoPosX = 203.74;
@@ -397,6 +387,13 @@
 
     nekoEl.style.left = `${nekoPosX - 16}px`;
     nekoEl.style.top = `${nekoPosY - 16}px`;
+  }
+
+  // Inicializa após DOM pronto para garantir que o título exista
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function() { setTimeout(init, 0); });
+  } else {
+    setTimeout(init, 0);
   }
 
 })();
