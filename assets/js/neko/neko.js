@@ -110,8 +110,8 @@
     const nameElement = document.querySelector('h1.post-title');
     if (nameElement) {
       const rect = nameElement.getBoundingClientRect();
-      // Posiciona o neko à direita do nome, no mesmo nível vertical
-      nekoPosX = rect.right + 30 + window.pageXOffset;
+      // Posiciona o neko próximo ao final do nome
+      nekoPosX = rect.right + 10
       nekoPosY = rect.top + rect.height / 2 + window.pageYOffset;
     } else {
       // Fallback se não encontrar o elemento
