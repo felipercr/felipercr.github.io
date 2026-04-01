@@ -107,6 +107,15 @@
     }
 
     repositionToAnchor();
+
+    if (persistPosition) {
+     let storedNeko = JSON.parse(window.localStorage.getItem("oneko"));
+     if (storedNeko) {
+        isAwake = storedNeko.isAwake || false;
+        idleAnimation = storedNeko.idleAnimation;
+        // Ignore o nekoPosX/Y guardado se quiser ele sempre no h1
+     }
+  }
     
     idleAnimation = "sleeping";
     idleAnimationFrame = 0;
@@ -185,28 +194,26 @@
   }
 
   function repositionToAnchor() {
-      const targetElement = document.querySelector('h1.post-title');
-      if (targetElement) {
-          const boldSpan = targetElement.querySelector('.font-weight-bold');
-          if (boldSpan) {
-              const r = boldSpan.getBoundingClientRect();
-              nekoPosX = r.right + 6 + window.pageXOffset;
-              nekoPosY = r.top + r.height / 2 + window.pageYOffset;
-          } else {
-              const r = targetElement.getBoundingClientRect();
-              //nekoPosX = r.left + 210 + window.pageXOffset;
-              //nekoPosY = r.top + r.height / 2 + window.pageYOffset;
-              nekoPosX = r.left + 210;
-              nekoPosY = r.top + 20;
-          }
-      } else {
-          nekoPosX = 203.74;
-          nekoPosY = 131.05;
-      }
+    const targetElement = document.querySelector('h1.post-title');
+    if (targetElement) {
+      const boldSpan = targetElement.querySelector('.font-weight-bold');
+      const target = boldSpan || targetElement;
+      const r = target.getBoundingClientRect();
+
+      // r.left e r.top são relativos à janela. 
+      // Somamos o scroll atual para ter a posição absoluta no documento.
+      const scrollX = window.pageXOffset || document.documentElement.scrollLeft;
+      const scrollY = window.pageYOffset || document.documentElement.scrollTop;
+
+      nekoPosX = (boldSpan ? r.right + 10 : r.left + 20) + scrollX;
       
-      // Atualiza o elemento visual imediatamente
-      nekoEl.style.left = `${nekoPosX - 16}px`;
-      nekoEl.style.top = `${nekoPosY - 16}px`;
+      // Usamos o r.top (topo do elemento) + um ajuste fixo. 
+      // Se ele "sobe" no reload, pode ser que o r.top esteja sendo pego antes do scroll do browser resetar.
+      nekoPosY = r.top + scrollY; 
+    }
+    
+    nekoEl.style.left = `${nekoPosX - 16}px`;
+    nekoEl.style.top = `${nekoPosY - 16}px`;
   }
 
   function toggleMouseState(e) {
