@@ -194,7 +194,7 @@
               nekoPosY = r.top + r.height / 2 + window.pageYOffset;
           } else {
               const r = targetElement.getBoundingClientRect();
-              nekoPosX = r.left + 200 + window.pageXOffset;
+              nekoPosX = r.left + 210 + window.pageXOffset;
               nekoPosY = r.top + r.height / 2 + window.pageYOffset;
           }
       } else {
