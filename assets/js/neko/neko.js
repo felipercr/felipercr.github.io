@@ -119,7 +119,7 @@
         } else {
           const r = targetElement.getBoundingClientRect();
           console.log('Neko anchor target: post-title (using left)', r);
-          nekoPosX = r.left + 10 + window.pageXOffset; // usar a borda esquerda do título
+          nekoPosX = r.left + 200 + window.pageXOffset; // usar a borda esquerda do título
           nekoPosY = r.top + r.height / 2 + window.pageYOffset;
         }
     } else {
