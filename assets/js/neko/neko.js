@@ -92,43 +92,6 @@
     ],
   };
 
-  // Anchor settings: keep neko fixed next to the page title
-  let anchorToTitle = true;
-  let anchorX = 32;
-  let anchorY = 32;
-  function updateAnchorPosition() {
-    const postTitle = document.querySelector('h1.post-title');
-    if (postTitle) {
-      const boldSpan = postTitle.querySelector('.font-weight-bold');
-      if (boldSpan) {
-        const r = boldSpan.getBoundingClientRect();
-        anchorX = r.right + 6;
-        anchorY = r.top + r.height / 2;
-      } else {
-        const r = postTitle.getBoundingClientRect();
-        anchorX = r.left + 10;
-        anchorY = r.top + r.height / 2;
-      }
-    } else {
-      anchorX = 203.74;
-      anchorY = 131.05;
-    }
-    if (nekoEl && nekoEl.style) {
-      nekoPosX = anchorX;
-      nekoPosY = anchorY;
-      nekoEl.style.left = `${nekoPosX - 16}px`;
-      nekoEl.style.top = `${nekoPosY - 16}px`;
-    }
-
-    if (nekoEl && nekoEl.style) {
-      nekoPosX = anchorX;
-      nekoPosY = anchorY;
-      nekoEl.style.left = `${nekoPosX - 16}px`;
-      nekoEl.style.top = `${nekoPosY - 16}px`;
-    }
-
-  }
-  
   function init() {
     let nekoFile = "/assets/js/neko/neko.gif"
     const curScript = document.currentScript
@@ -143,8 +106,7 @@
       }
     }
 
-    // compute anchor once; updateAnchorPosition will set `nekoPosX/Y`
-    updateAnchorPosition();
+    repositionToAnchor();
     
     idleAnimation = "sleeping";
     idleAnimationFrame = 0;
@@ -174,7 +136,7 @@
     nekoEl.ariaHidden = true;
     nekoEl.style.width = "32px";
     nekoEl.style.height = "32px";
-    nekoEl.style.position = "fixed";
+    nekoEl.style.position = "absolute";
     nekoEl.style.pointerEvents = "auto";
     nekoEl.style.imageRendering = "pixelated";
     nekoEl.style.left = `${nekoPosX - 16}px`;
@@ -183,25 +145,21 @@
 
     nekoEl.style.backgroundImage = `url(${nekoFile})`;
 
+    window.addEventListener("resize", () => {
+    // Se o gato estiver dormindo ou parado (isAwake = false), 
+    // nós forçamos ele a seguir o título no resize.
+      if (!isAwake) {
+          repositionToAnchor();
+      }
+    });
+
     document.body.appendChild(nekoEl);
 
-    // initialize anchored position and attach resize/scroll handlers
-    updateAnchorPosition();
-    function debounce(fn, wait) {
-      let t;
-      return function(...args) {
-        clearTimeout(t);
-        t = setTimeout(() => fn.apply(this, args), wait);
-      };
-    }
-    const debouncedUpdate = debounce(updateAnchorPosition, 80);
-    window.addEventListener('resize', debouncedUpdate);
-    window.addEventListener('scroll', debouncedUpdate, { passive: true });
-    window.addEventListener('orientationchange', debouncedUpdate);
-
     document.addEventListener("mousemove", function (event) {
-      mousePosX = event.clientX;
-      mousePosY = event.clientY;
+      //mousePosX = event.clientX;
+      //mousePosY = event.clientY;
+      mousePosX = event.clientX + window.pageXOffset;
+      mousePosY = event.clientY + window.pageYOffset;
     });
 
     document.addEventListener("mousedown", toggleMouseState);
@@ -224,6 +182,29 @@
     }
 
     window.requestAnimationFrame(onAnimationFrame);
+  }
+
+  function repositionToAnchor() {
+      const targetElement = document.querySelector('h1.post-title');
+      if (targetElement) {
+          const boldSpan = targetElement.querySelector('.font-weight-bold');
+          if (boldSpan) {
+              const r = boldSpan.getBoundingClientRect();
+              nekoPosX = r.right + 6 + window.pageXOffset;
+              nekoPosY = r.top + r.height / 2 + window.pageYOffset;
+          } else {
+              const r = targetElement.getBoundingClientRect();
+              nekoPosX = r.left + 200 + window.pageXOffset;
+              nekoPosY = r.top + r.height / 2 + window.pageYOffset;
+          }
+      } else {
+          nekoPosX = 203.74;
+          nekoPosY = 131.05;
+      }
+      
+      // Atualiza o elemento visual imediatamente
+      nekoEl.style.left = `${nekoPosX - 16}px`;
+      nekoEl.style.top = `${nekoPosY - 16}px`;
   }
 
   function toggleMouseState(e) {
@@ -365,42 +346,6 @@
 
   function frame() {
     frameCount += 1;
-
-    // If anchored, keep neko fixed at anchorX/anchorY and only run idle/petting logic
-    if (anchorToTitle) {
-      // Anchor position updated via resize/scroll handlers (debounced)
-      const diffX = anchorX - mousePosX;
-      const diffY = anchorY - mousePosY;
-      const distance = Math.sqrt(diffX ** 2 + diffY ** 2);
-
-      // Sleep/wake logic still applies
-      if (!isAwake) {
-        if (mouseButtonDown && Math.abs(diffX) < 32 && Math.abs(diffY) < 32) {
-          isAwake = true;
-          resetIdleAnimation();
-        } else {
-          idle(diffX, diffY);
-          nekoPosX = anchorX;
-          nekoPosY = anchorY;
-          nekoEl.style.left = `${nekoPosX - 16}px`;
-          nekoEl.style.top = `${nekoPosY - 16}px`;
-          return;
-        }
-      }
-
-      if (distance < nekoSpeed || distance < 48) {
-        idle(diffX, diffY);
-      } else {
-        idle(diffX, diffY);
-      }
-
-      nekoPosX = anchorX;
-      nekoPosY = anchorY;
-      nekoEl.style.left = `${nekoPosX - 16}px`;
-      nekoEl.style.top = `${nekoPosY - 16}px`;
-      return;
-    }
-
     const diffX = nekoPosX - mousePosX;
     const diffY = nekoPosY - mousePosY;
     const distance = Math.sqrt(diffX ** 2 + diffY ** 2);
