@@ -106,12 +106,13 @@
       }
     }
 
-    // Calcula posição relativa ao nome (h1.post-title)
-    const nameElement = document.querySelector('h1.post-title');
-    if (nameElement) {
-      const rect = nameElement.getBoundingClientRect();
-      // Posiciona o neko próximo ao final do nome
-      nekoPosX = rect.right + 10
+    // Escolhe elemento alvo: navbar brand (site title) primeiro, depois h1.post-title
+    const targetElement = document.querySelector('.navbar-brand.title') || document.querySelector('h1.post-title');
+    if (targetElement) {
+      const rect = targetElement.getBoundingClientRect();
+      console.debug('Neko anchor target:', (targetElement.className || targetElement.tagName), rect);
+      // Posiciona o neko próximo ao final do elemento (direita), levando em conta scroll
+      nekoPosX = rect.right + 10 + window.pageXOffset;
       nekoPosY = rect.top + rect.height / 2 + window.pageYOffset;
     } else {
       // Fallback se não encontrar o elemento
