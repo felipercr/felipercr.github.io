@@ -106,8 +106,19 @@
       }
     }
 
-    nekoPosX = 393.74; 
-    nekoPosY = 131.05;
+    // Calcula posição relativa ao nome (h1.post-title)
+    const nameElement = document.querySelector('h1.post-title');
+    if (nameElement) {
+      const rect = nameElement.getBoundingClientRect();
+      // Posiciona o neko à direita do nome, no mesmo nível vertical
+      nekoPosX = rect.right + 30 + window.pageXOffset;
+      nekoPosY = rect.top + rect.height / 2 + window.pageYOffset;
+    } else {
+      // Fallback se não encontrar o elemento
+      nekoPosX = 203.74;
+      nekoPosY = 131.05;
+    }
+    
     idleAnimation = "sleeping";
     idleAnimationFrame = 0;
     isAwake = false;
