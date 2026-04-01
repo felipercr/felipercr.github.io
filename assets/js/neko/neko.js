@@ -225,7 +225,7 @@
     // window.scrollY é o quanto a página já desceu.
     // A soma dos dois é a posição fixa no DOCUMENTO.
     const absoluteTop = r.top + window.scrollY + 20;
-    const absoluteLeft = (boldSpan ? r.right + 10 : r.left + 20) + window.scrollX + 185;
+    const absoluteLeft = (boldSpan ? r.right + 10 : r.left + 20) + window.scrollX + 190;
 
     nekoPosX = absoluteLeft;
     nekoPosY = absoluteTop + 5; // +5 para alinhar visualmente com o texto
