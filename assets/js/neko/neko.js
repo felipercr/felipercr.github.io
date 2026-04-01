@@ -215,11 +215,11 @@
       const scrollX = window.pageXOffset || document.documentElement.scrollLeft;
       const scrollY = window.pageYOffset || document.documentElement.scrollTop;
 
-      nekoPosX = (boldSpan ? r.right + 205 : r.left + 20) + scrollX;
+      nekoPosX = (boldSpan ? r.right + 10 : r.left + 20) + scrollX + 205;
       
       // Usamos o r.top (topo do elemento) + um ajuste fixo. 
       // Se ele "sobe" no reload, pode ser que o r.top esteja sendo pego antes do scroll do browser resetar.
-      nekoPosY = r.top + 20; 
+      nekoPosY = r.top + scrollY + 30; 
     }
     
     nekoEl.style.left = `${nekoPosX - 16}px`;
