@@ -27,7 +27,6 @@
     alert: [[-7, -3]],
     scratchSelf: [
       [-5, 0],
-
       [-6, 0],
       [-7, 0],
     ],
@@ -92,11 +91,85 @@
     ],
   };
 
+  // ─── FIX 1 & 2: aguarda o elemento alvo estar estável antes de posicionar ───
+  // Tenta obter a posição do elemento. Retorna null se ainda não está pronto.
+  function getAnchorPosition() {
+    const targetElement = document.querySelector('h1.post-title');
+    if (!targetElement) return null;
+
+    const boldSpan = targetElement.querySelector('.font-weight-bold');
+    const target = boldSpan || targetElement;
+    const r = target.getBoundingClientRect();
+
+    // Se o elemento ainda não tem dimensões, o layout não terminou
+    if (r.width === 0 && r.height === 0) return null;
+
+    const absoluteTop  = r.top  + window.scrollY + 20;
+    const absoluteLeft = (boldSpan ? r.right + 10 : r.left + 20) + window.scrollX + 190;
+
+    return { x: absoluteLeft, y: absoluteTop + 5 };
+  }
+
+  // Aplica a posição ao elemento DOM
+  function applyNekoPosition(x, y) {
+    nekoPosX = x;
+    nekoPosY = y;
+    nekoEl.style.left = `${nekoPosX - 16}px`;
+    nekoEl.style.top  = `${nekoPosY - 16}px`;
+  }
+
+  function repositionToAnchor() {
+    if (isAwake) return;
+    const pos = getAnchorPosition();
+    if (!pos) return;
+    applyNekoPosition(pos.x, pos.y);
+  }
+
+  // Espera o elemento estar pronto com posição estável e executa o callback.
+  // Usa um loop de rAF com verificação de estabilidade (2 leituras iguais).
+  function waitForStableAnchor(callback) {
+    let lastTop = -1;
+    let stableCount = 0;
+    const NEEDED_STABLE_FRAMES = 3; // quantos frames consecutivos com mesma posição
+    const MAX_ATTEMPTS = 120;       // ~2s a 60fps antes de desistir
+    let attempts = 0;
+
+    function check() {
+      attempts++;
+      const pos = getAnchorPosition();
+
+      if (pos) {
+        const top = Math.round(pos.y);
+        if (top === lastTop) {
+          stableCount++;
+        } else {
+          stableCount = 0;
+          lastTop = top;
+        }
+
+        if (stableCount >= NEEDED_STABLE_FRAMES) {
+          callback(pos);
+          return;
+        }
+      }
+
+      if (attempts < MAX_ATTEMPTS) {
+        requestAnimationFrame(check);
+      } else {
+        // Fallback: usa o que tiver mesmo sem estabilidade
+        if (pos) callback(pos);
+      }
+    }
+
+    requestAnimationFrame(check);
+  }
+  // ─────────────────────────────────────────────────────────────────────────────
+
   function init() {
-    let nekoFile = "/assets/js/neko/neko.gif"
-    const curScript = document.currentScript
+    let nekoFile = "/assets/js/neko/neko.gif";
+    const curScript = document.currentScript;
     if (curScript && curScript.dataset.cat) {
-      nekoFile = curScript.dataset.cat
+      nekoFile = curScript.dataset.cat;
     }
     if (curScript && curScript.dataset.persistPosition) {
       if (curScript.dataset.persistPosition === "") {
@@ -106,26 +179,19 @@
       }
     }
 
-    repositionToAnchor();
-
     if (persistPosition) {
-     let storedNeko = JSON.parse(window.localStorage.getItem("oneko"));
-     if (storedNeko) {
+      const storedNeko = JSON.parse(window.localStorage.getItem("oneko"));
+      if (storedNeko) {
         isAwake = storedNeko.isAwake || false;
         idleAnimation = storedNeko.idleAnimation;
-        // Ignore o nekoPosX/Y guardado se quiser ele sempre no h1
-     }
-  }
-    
+      }
+    }
+
     idleAnimation = "sleeping";
     idleAnimationFrame = 0;
     isAwake = false;
 
-    if (!persistPosition || window.localStorage.getItem("oneko") === null) {
-        idleAnimation = "sleeping";
-        idleAnimationFrame = 0;
-    }
-
+    // Monta o elemento com posição temporária (invisível até posicionarmos)
     nekoEl.id = "oneko";
     nekoEl.ariaHidden = true;
     nekoEl.style.width = "32px";
@@ -134,47 +200,37 @@
     nekoEl.style.pointerEvents = "auto";
     nekoEl.style.imageRendering = "pixelated";
     nekoEl.style.left = `${nekoPosX - 16}px`;
-    nekoEl.style.top = `${nekoPosY - 16}px`;
+    nekoEl.style.top  = `${nekoPosY - 16}px`;
     nekoEl.style.zIndex = 500;
-
+    nekoEl.style.visibility = "hidden"; // esconde até ter a posição certa
     nekoEl.style.backgroundImage = `url(${nekoFile})`;
-
-    window.addEventListener("resize", () => {
-    // Se o gato estiver dormindo ou parado (isAwake = false), 
-    // nós forçamos ele a seguir o título no resize.
-      if (!isAwake) {
-          repositionToAnchor();
-      }
-    });
-
-    window.addEventListener("scroll", () => {
-      if (!isAwake) window.requestAnimationFrame(repositionToAnchor);
-    }, { passive: true });
 
     const initialSprite = spriteSets["sleeping"][0];
     nekoEl.style.backgroundPosition = `${initialSprite[0] * 32}px ${initialSprite[1] * 32}px`;
 
     document.body.appendChild(nekoEl);
 
+    // ── Aguarda posição estável e só então mostra o neko ──
+    waitForStableAnchor(function(pos) {
+      applyNekoPosition(pos.x, pos.y);
+      nekoEl.style.visibility = "visible"; // aparece já no lugar certo
+    });
+
+    // Reposiciona no resize/scroll enquanto dormindo
     window.addEventListener("resize", () => {
-      if (!isAwake) window.requestAnimationFrame(repositionToAnchor);
+      if (!isAwake) repositionToAnchor();
     });
 
     window.addEventListener("scroll", () => {
       if (!isAwake) window.requestAnimationFrame(repositionToAnchor);
     }, { passive: true });
 
-    repositionToAnchor();
-
+    // Reposiciona após load completo (imagens, fontes web, etc.)
     window.addEventListener("load", () => {
-      repositionToAnchor();
+      if (!isAwake) repositionToAnchor();
     });
 
-    setTimeout(repositionToAnchor, 200);
-
     document.addEventListener("mousemove", function (event) {
-      //mousePosX = event.clientX;
-      //mousePosY = event.clientY;
       mousePosX = event.clientX + window.pageXOffset;
       mousePosY = event.clientY + window.pageYOffset;
     });
@@ -183,7 +239,7 @@
     document.addEventListener("mouseup", toggleMouseState);
 
     if (persistPosition) {
-      window.addEventListener("beforeunload", function (event) {
+      window.addEventListener("beforeunload", function () {
         window.localStorage.setItem("oneko", JSON.stringify({
           nekoPosX: nekoPosX,
           nekoPosY: nekoPosY,
@@ -193,7 +249,7 @@
           idleTime: idleTime,
           idleAnimation: idleAnimation,
           idleAnimationFrame: idleAnimationFrame,
-          bgPos: nekoEl.style.backgroundPosition
+          bgPos: nekoEl.style.backgroundPosition,
         }));
       });
     }
@@ -201,42 +257,16 @@
     window.requestAnimationFrame(onAnimationFrame);
   }
 
-  function repositionToAnchor() {
-    const targetElement = document.querySelector('h1.post-title');
-    if (!targetElement || isAwake) return; // Não move se estiver acordado
-
-    const boldSpan = targetElement.querySelector('.font-weight-bold');
-    const target = boldSpan || targetElement;
-    const r = target.getBoundingClientRect();
-
-    // r.top é a distância do elemento até o TOPO DA JANELA (viewport).
-    // window.scrollY é o quanto a página já desceu.
-    // A soma dos dois é a posição fixa no DOCUMENTO.
-    const absoluteTop = r.top + window.scrollY + 20;
-    const absoluteLeft = (boldSpan ? r.right + 10 : r.left + 20) + window.scrollX + 190;
-
-    nekoPosX = absoluteLeft;
-    nekoPosY = absoluteTop + 5; // +5 para alinhar visualmente com o texto
-
-    nekoEl.style.left = `${nekoPosX - 16}px`;
-    nekoEl.style.top = `${nekoPosY - 16}px`;
-}
-
   function toggleMouseState(e) {
-    var flags = e.buttons !== undefined ? e.buttons : e.which;
+    const flags = e.buttons !== undefined ? e.buttons : e.which;
     mouseButtonDown = (flags & 1) === 1;
   }
 
   let lastFrameTimestamp;
 
   function onAnimationFrame(timestamp) {
-    // Stops execution if the neko element is removed from DOM
-    if (!nekoEl.isConnected) {
-      return;
-    }
-    if (!lastFrameTimestamp) {
-      lastFrameTimestamp = timestamp;
-    }
+    if (!nekoEl.isConnected) return;
+    if (!lastFrameTimestamp) lastFrameTimestamp = timestamp;
     if (timestamp - lastFrameTimestamp > 100) {
       lastFrameTimestamp = timestamp;
       frame();
@@ -261,92 +291,49 @@
   function idle(diffX, diffY) {
     idleTime += 1;
 
-    // every ~ 5 seconds
     if (
       idleTime > 10 &&
-      Math.floor(Math.random() * 50) == 0 &&
+      Math.floor(Math.random() * 50) === 0 &&
       idleAnimation == null
     ) {
       let avalibleIdleAnimations = ["sleeping", "scratchSelf"];
-      if (nekoPosX < scratchWallDistance) {
-        avalibleIdleAnimations.push("scratchWallW");
-      }
-      if (nekoPosY < scratchWallDistance) {
-        avalibleIdleAnimations.push("scratchWallN");
-      }
-      if (nekoPosX > window.innerWidth - scratchWallDistance) {
-        avalibleIdleAnimations.push("scratchWallE");
-      }
-      if (nekoPosY > window.innerHeight - scratchWallDistance) {
-        avalibleIdleAnimations.push("scratchWallS");
-      }
-      idleAnimation =
-        avalibleIdleAnimations[
-          Math.floor(Math.random() * avalibleIdleAnimations.length)
-        ];
+      if (nekoPosX < scratchWallDistance) avalibleIdleAnimations.push("scratchWallW");
+      if (nekoPosY < scratchWallDistance) avalibleIdleAnimations.push("scratchWallN");
+      if (nekoPosX > window.innerWidth - scratchWallDistance) avalibleIdleAnimations.push("scratchWallE");
+      if (nekoPosY > window.innerHeight - scratchWallDistance) avalibleIdleAnimations.push("scratchWallS");
+
+      idleAnimation = avalibleIdleAnimations[Math.floor(Math.random() * avalibleIdleAnimations.length)];
+
       if (idleAnimation?.startsWith("scratchWall")) {
-        // Nudge the cat to the closest wall so the animation looks correct.
-        if (idleAnimation === "scratchWallW") {
-          nekoPosX = 16;
-        }
-        if (idleAnimation === "scratchWallE") {
-          nekoPosX = window.innerWidth - 16;
-        }
-        if (idleAnimation === "scratchWallN") {
-          nekoPosY = 16;
-        }
-        if (idleAnimation === "scratchWallS") {
-          nekoPosY = window.innerHeight - 16;
-        }
+        if (idleAnimation === "scratchWallW") nekoPosX = 16;
+        if (idleAnimation === "scratchWallE") nekoPosX = window.innerWidth - 16;
+        if (idleAnimation === "scratchWallN") nekoPosY = 16;
+        if (idleAnimation === "scratchWallS") nekoPosY = window.innerHeight - 16;
         nekoEl.style.left = `${nekoPosX - 16}px`;
-        nekoEl.style.top = `${nekoPosY - 16}px`;
+        nekoEl.style.top  = `${nekoPosY - 16}px`;
       }
     }
 
     switch (idleAnimation) {
       case "sleeping":
-        //if (idleAnimationFrame < 8) {
-        //  setSprite("tired", 0);
-        //  break;
-        //}
-
         if (mouseButtonDown && diffY < 32 && diffY > -32 && diffX < 32 && diffX > -32) {
-            setSprite("heart", Math.floor(idleAnimationFrame / 4));
+          setSprite("heart", Math.floor(idleAnimationFrame / 4));
         } else {
-            // Usa apenas os frames de sono direto (2 frames que alternam)
-            setSprite("sleeping", Math.floor(idleAnimationFrame / 4));
+          setSprite("sleeping", Math.floor(idleAnimationFrame / 4));
         }
-
-        // Aumentamos o limite para ele não "acordar" sozinho por tempo
-        if (idleAnimationFrame > 999) { 
-            idleAnimationFrame = 0; 
-        }
+        if (idleAnimationFrame > 999) idleAnimationFrame = 0;
         break;
 
-        // check diffs to ensure pointer is on sprite - PETTING FUNCTIONALITY
-        // Expanded hitbox for easier petting
-        //if (mouseButtonDown && diffY < 32 && diffY > -32 && diffX < 32 && diffX > -32) {
-        //  setSprite("heart", Math.floor(idleAnimationFrame / 4));
-        //} else {
-        //  setSprite("sleeping", Math.floor(idleAnimationFrame / 4));
-        //}
-
-        //if (idleAnimationFrame > 192) {
-        //  resetIdleAnimation();
-        //}
-        //break;
       case "scratchWallN":
       case "scratchWallS":
       case "scratchWallE":
       case "scratchWallW":
       case "scratchSelf":
         setSprite(idleAnimation, idleAnimationFrame);
-        if (idleAnimationFrame > 9) {
-          resetIdleAnimation();
-        }
+        if (idleAnimationFrame > 9) resetIdleAnimation();
         break;
+
       default:
-        // If cat is idle and clicked on, make it go to sleep
         if (mouseButtonDown && diffY < 32 && diffY > -32 && diffX < 32 && diffX > -32) {
           idleAnimation = "sleeping";
           idleAnimationFrame = 0;
@@ -365,16 +352,14 @@
     const diffY = nekoPosY - mousePosY;
     const distance = Math.sqrt(diffX ** 2 + diffY ** 2);
 
-    // Se não estiver acordado, ele fica preso no loop de sono
     if (!isAwake) {
-        // Se clicar no gato, ele acorda
-        if (mouseButtonDown && Math.abs(diffX) < 32 && Math.abs(diffY) < 32) {
-            isAwake = true;
-            resetIdleAnimation();
-        } else {
-            idle(diffX, diffY); // Mantém a animação de sono
-            return; // Impede o resto do código de rodar (não move)
-        }
+      if (mouseButtonDown && Math.abs(diffX) < 32 && Math.abs(diffY) < 32) {
+        isAwake = true;
+        resetIdleAnimation();
+      } else {
+        idle(diffX, diffY);
+        return;
+      }
     }
 
     if (distance < nekoSpeed || distance < 48) {
@@ -387,35 +372,30 @@
 
     if (idleTime > 1) {
       setSprite("alert", 0);
-      // count down after being alerted before moving
       idleTime = Math.min(idleTime, 7);
       idleTime -= 1;
       return;
     }
 
-    let direction;
-    direction = diffY / distance > 0.5 ? "N" : "";
+    let direction = "";
+    direction += diffY / distance > 0.5  ? "N" : "";
     direction += diffY / distance < -0.5 ? "S" : "";
-    direction += diffX / distance > 0.5 ? "W" : "";
+    direction += diffX / distance > 0.5  ? "W" : "";
     direction += diffX / distance < -0.5 ? "E" : "";
-    if (direction === "") {
-      direction = "idle";
-    }
+    if (direction === "") direction = "idle";
+
     setSprite(direction, frameCount);
 
     nekoPosX -= (diffX / distance) * nekoSpeed;
     nekoPosY -= (diffY / distance) * nekoSpeed;
 
-    //nekoPosX = Math.min(Math.max(16, nekoPosX), window.innerWidth - 16);
-    //nekoPosY = Math.min(Math.max(16, nekoPosY), window.innerHeight - 16);
-    nekoPosX = Math.min(Math.max(16, nekoPosX), document.documentElement.scrollWidth - 16);
+    nekoPosX = Math.min(Math.max(16, nekoPosX), document.documentElement.scrollWidth  - 16);
     nekoPosY = Math.min(Math.max(16, nekoPosY), document.documentElement.scrollHeight - 16);
 
     nekoEl.style.left = `${nekoPosX - 16}px`;
-    nekoEl.style.top = `${nekoPosY - 16}px`;
+    nekoEl.style.top  = `${nekoPosY - 16}px`;
   }
 
-  // Inicializa após DOM pronto para garantir que o título exista
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', function() { setTimeout(init, 0); });
   } else {
