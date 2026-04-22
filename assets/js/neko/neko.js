@@ -60,17 +60,18 @@
     if (!h1) return null;
 
     const r = h1.getBoundingClientRect();
-    // Elemento ainda não renderizado
     if (r.width === 0 && r.height === 0) return null;
 
-    // Posição absoluta no documento
-    const absTop  = r.top  + window.scrollY;
-    const absLeft = r.left + window.scrollX;
+    // Mede onde o texto termina de verdade (não a borda do elemento,
+    // que ocupa 100% da largura mesmo com texto curto)
+    const range = document.createRange();
+    range.selectNodeContents(h1);
+    const textRect = range.getBoundingClientRect();
 
-    // Posiciona à direita do texto do h1, alinhado verticalmente ao centro
+    // Posição absoluta no documento
     return {
-      x: absLeft + r.width + 16,
-      y: absTop  + r.height / 2,
+      x: textRect.right + window.scrollX + 8,
+      y: r.top + window.scrollY + r.height / 2,
     };
   }
 
