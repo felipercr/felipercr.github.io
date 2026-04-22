@@ -25,156 +25,175 @@
   const spriteSets = {
     idle: [[-3, -3]],
     alert: [[-7, -3]],
-    scratchSelf: [[-5, 0], [-6, 0], [-7, 0]],
-    scratchWallN: [[0, 0], [0, -1]],
-    scratchWallS: [[-7, -1], [-6, -2]],
-    scratchWallE: [[-2, -2], [-2, -3]],
-    scratchWallW: [[-4, 0], [-4, -1]],
+    scratchSelf: [
+      [-5, 0],
+
+      [-6, 0],
+      [-7, 0],
+    ],
+    scratchWallN: [
+      [0, 0],
+      [0, -1],
+    ],
+    scratchWallS: [
+      [-7, -1],
+      [-6, -2],
+    ],
+    scratchWallE: [
+      [-2, -2],
+      [-2, -3],
+    ],
+    scratchWallW: [
+      [-4, 0],
+      [-4, -1],
+    ],
     tired: [[-3, -2]],
-    sleeping: [[-2, 0], [-2, -1]],
-    N:  [[-1, -2], [-1, -3]],
-    NE: [[0, -2],  [0, -3]],
-    E:  [[-3, 0],  [-3, -1]],
-    SE: [[-5, -1], [-5, -2]],
-    S:  [[-6, -3], [-7, -2]],
-    SW: [[-5, -3], [-6, -1]],
-    W:  [[-4, -2], [-4, -3]],
-    NW: [[-1, 0],  [-1, -1]],
-    heart: [[-8, 0], [-8, -1], [-8, -2], [-8, -3]],
+    sleeping: [
+      [-2, 0],
+      [-2, -1],
+    ],
+    N: [
+      [-1, -2],
+      [-1, -3],
+    ],
+    NE: [
+      [0, -2],
+      [0, -3],
+    ],
+    E: [
+      [-3, 0],
+      [-3, -1],
+    ],
+    SE: [
+      [-5, -1],
+      [-5, -2],
+    ],
+    S: [
+      [-6, -3],
+      [-7, -2],
+    ],
+    SW: [
+      [-5, -3],
+      [-6, -1],
+    ],
+    W: [
+      [-4, -2],
+      [-4, -3],
+    ],
+    NW: [
+      [-1, 0],
+      [-1, -1],
+    ],
+    heart: [
+      [-8, 0],
+      [-8, -1],
+      [-8, -2],
+      [-8, -3],
+    ],
   };
 
-  // ─── Posicionamento ────────────────────────────────────────────────────────
-
-  // Enquanto dormindo usamos position:fixed — relativo ao viewport.
-  // Isso elimina o bug do mobile onde window.scrollY=0 no load causa offset errado,
-  // e também o delay de "esperar layout estabilizar" porque getBoundingClientRect
-  // já é relativo ao viewport e é imediato.
-  function getAnchorViewportPos() {
-    const targetElement = document.querySelector('h1.post-title');
-    if (!targetElement) return null;
-
-    const boldSpan = targetElement.querySelector('.font-weight-bold');
-    const target = boldSpan || targetElement;
-    const r = target.getBoundingClientRect();
-
-    if (r.width === 0 && r.height === 0) return null;
-
-    // Posição relativa ao VIEWPORT (funciona diretamente com position:fixed)
-    const top  = r.top + 20 + 5;
-    const left = (boldSpan ? r.right + 10 : r.left + 20) + 190;
-
-    return { x: left, y: top };
-  }
-
-  function setFixedPosition(x, y) {
-    // Salva posição absoluta para uso quando acordar e trocar para absolute
-    nekoPosX = x + window.scrollX;
-    nekoPosY = y + window.scrollY;
-    nekoEl.style.left = `${x - 16}px`;
-    nekoEl.style.top  = `${y - 16}px`;
-  }
-
-  function repositionToAnchor() {
-    if (isAwake) return;
-    const pos = getAnchorViewportPos();
-    if (!pos) return;
-    setFixedPosition(pos.x, pos.y);
-  }
-
-  function switchToAbsolute() {
-    nekoEl.style.position = 'absolute';
-    nekoEl.style.left = `${nekoPosX - 16}px`;
-    nekoEl.style.top  = `${nekoPosY - 16}px`;
-  }
-
-  // ─── Init ──────────────────────────────────────────────────────────────────
-
   function init() {
-    let nekoFile = "/assets/js/neko/neko.gif";
-    const curScript = document.currentScript;
+    let nekoFile = "/assets/js/neko/neko.gif"
+    const curScript = document.currentScript
     if (curScript && curScript.dataset.cat) {
-      nekoFile = curScript.dataset.cat;
+      nekoFile = curScript.dataset.cat
     }
     if (curScript && curScript.dataset.persistPosition) {
-      persistPosition = curScript.dataset.persistPosition === ""
-        ? true
-        : JSON.parse(curScript.dataset.persistPosition.toLowerCase());
+      if (curScript.dataset.persistPosition === "") {
+        persistPosition = true;
+      } else {
+        persistPosition = JSON.parse(curScript.dataset.persistPosition.toLowerCase());
+      }
     }
 
+    repositionToAnchor();
+
+    if (persistPosition) {
+     let storedNeko = JSON.parse(window.localStorage.getItem("oneko"));
+     if (storedNeko) {
+        isAwake = storedNeko.isAwake || false;
+        idleAnimation = storedNeko.idleAnimation;
+        // Ignore o nekoPosX/Y guardado se quiser ele sempre no h1
+     }
+  }
+    
     idleAnimation = "sleeping";
     idleAnimationFrame = 0;
     isAwake = false;
+
+    if (!persistPosition || window.localStorage.getItem("oneko") === null) {
+        idleAnimation = "sleeping";
+        idleAnimationFrame = 0;
+    }
 
     nekoEl.id = "oneko";
     nekoEl.ariaHidden = true;
     nekoEl.style.width = "32px";
     nekoEl.style.height = "32px";
-    nekoEl.style.position = "fixed";   // começa fixed!
+    nekoEl.style.position = "absolute";
     nekoEl.style.pointerEvents = "auto";
     nekoEl.style.imageRendering = "pixelated";
-    nekoEl.style.left = "-100px";      // fora da tela até posicionar
-    nekoEl.style.top  = "-100px";
+    nekoEl.style.left = `${nekoPosX - 16}px`;
+    nekoEl.style.top = `${nekoPosY - 16}px`;
     nekoEl.style.zIndex = 500;
+
     nekoEl.style.backgroundImage = `url(${nekoFile})`;
+
+    window.addEventListener("resize", () => {
+    // Se o gato estiver dormindo ou parado (isAwake = false), 
+    // nós forçamos ele a seguir o título no resize.
+      if (!isAwake) {
+          repositionToAnchor();
+      }
+    });
+
+    window.addEventListener("scroll", () => {
+      if (!isAwake) window.requestAnimationFrame(repositionToAnchor);
+    }, { passive: true });
 
     const initialSprite = spriteSets["sleeping"][0];
     nekoEl.style.backgroundPosition = `${initialSprite[0] * 32}px ${initialSprite[1] * 32}px`;
 
     document.body.appendChild(nekoEl);
 
-    // Posiciona imediatamente — sem setTimeout, sem esperar load
-    const pos = getAnchorViewportPos();
-    if (pos) {
-      setFixedPosition(pos.x, pos.y);
-    }
-
-    // Reposiciona quando fontes/imagens terminarem (pode mudar altura do título)
-    window.addEventListener("load", () => {
-      if (!isAwake) repositionToAnchor();
-    });
-
-    // Reposiciona em resize (rotação de tela, janela redimensionada)
     window.addEventListener("resize", () => {
-      if (!isAwake) repositionToAnchor();
+      if (!isAwake) window.requestAnimationFrame(repositionToAnchor);
     });
 
-    // Scroll: atualiza nekoPosX/Y absolutos para quando acordar.
-    // Não precisa mover o elemento pois está fixed.
     window.addEventListener("scroll", () => {
-      if (!isAwake) {
-        nekoPosX = parseFloat(nekoEl.style.left) + 16 + window.scrollX;
-        nekoPosY = parseFloat(nekoEl.style.top)  + 16 + window.scrollY;
-      }
+      if (!isAwake) window.requestAnimationFrame(repositionToAnchor);
     }, { passive: true });
 
-    // Mouse
+    repositionToAnchor();
+
+    window.addEventListener("load", () => {
+      repositionToAnchor();
+    });
+
+    setTimeout(repositionToAnchor, 200);
+
     document.addEventListener("mousemove", function (event) {
+      //mousePosX = event.clientX;
+      //mousePosY = event.clientY;
       mousePosX = event.clientX + window.pageXOffset;
       mousePosY = event.clientY + window.pageYOffset;
     });
-    document.addEventListener("mousedown", toggleMouseState);
-    document.addEventListener("mouseup",   toggleMouseState);
 
-    // Touch (mobile)
-    document.addEventListener("touchmove", function (event) {
-      const t = event.touches[0];
-      mousePosX = t.clientX + window.pageXOffset;
-      mousePosY = t.clientY + window.pageYOffset;
-    }, { passive: true });
-    document.addEventListener("touchstart", function (event) {
-      const t = event.touches[0];
-      mousePosX = t.clientX + window.pageXOffset;
-      mousePosY = t.clientY + window.pageYOffset;
-      mouseButtonDown = true;
-    }, { passive: true });
-    document.addEventListener("touchend", () => { mouseButtonDown = false; }, { passive: true });
+    document.addEventListener("mousedown", toggleMouseState);
+    document.addEventListener("mouseup", toggleMouseState);
 
     if (persistPosition) {
-      window.addEventListener("beforeunload", function () {
+      window.addEventListener("beforeunload", function (event) {
         window.localStorage.setItem("oneko", JSON.stringify({
-          nekoPosX, nekoPosY, mousePosX, mousePosY,
-          frameCount, idleTime, idleAnimation, idleAnimationFrame,
-          bgPos: nekoEl.style.backgroundPosition,
+          nekoPosX: nekoPosX,
+          nekoPosY: nekoPosY,
+          mousePosX: mousePosX,
+          mousePosY: mousePosY,
+          frameCount: frameCount,
+          idleTime: idleTime,
+          idleAnimation: idleAnimation,
+          idleAnimationFrame: idleAnimationFrame,
+          bgPos: nekoEl.style.backgroundPosition
         }));
       });
     }
@@ -182,18 +201,42 @@
     window.requestAnimationFrame(onAnimationFrame);
   }
 
-  // ─── Animação ──────────────────────────────────────────────────────────────
+  function repositionToAnchor() {
+    const targetElement = document.querySelector('h1.post-title');
+    if (!targetElement || isAwake) return; // Não move se estiver acordado
+
+    const boldSpan = targetElement.querySelector('.font-weight-bold');
+    const target = boldSpan || targetElement;
+    const r = target.getBoundingClientRect();
+
+    // r.top é a distância do elemento até o TOPO DA JANELA (viewport).
+    // window.scrollY é o quanto a página já desceu.
+    // A soma dos dois é a posição fixa no DOCUMENTO.
+    const absoluteTop = r.top + window.scrollY + 20;
+    const absoluteLeft = (boldSpan ? r.right + 10 : r.left + 20) + window.scrollX + 190;
+
+    nekoPosX = absoluteLeft;
+    nekoPosY = absoluteTop + 5; // +5 para alinhar visualmente com o texto
+
+    nekoEl.style.left = `${nekoPosX - 16}px`;
+    nekoEl.style.top = `${nekoPosY - 16}px`;
+}
 
   function toggleMouseState(e) {
-    const flags = e.buttons !== undefined ? e.buttons : e.which;
+    var flags = e.buttons !== undefined ? e.buttons : e.which;
     mouseButtonDown = (flags & 1) === 1;
   }
 
   let lastFrameTimestamp;
 
   function onAnimationFrame(timestamp) {
-    if (!nekoEl.isConnected) return;
-    if (!lastFrameTimestamp) lastFrameTimestamp = timestamp;
+    // Stops execution if the neko element is removed from DOM
+    if (!nekoEl.isConnected) {
+      return;
+    }
+    if (!lastFrameTimestamp) {
+      lastFrameTimestamp = timestamp;
+    }
     if (timestamp - lastFrameTimestamp > 100) {
       lastFrameTimestamp = timestamp;
       frame();
@@ -202,7 +245,10 @@
   }
 
   function setSprite(name, frame) {
-    if (!spriteSets[name]) { name = "idle"; }
+    if (!spriteSets[name]) {
+      console.warn(`Unknown sprite direction: "${name}", defaulting to idle`);
+      name = "idle";
+    }
     const sprite = spriteSets[name][frame % spriteSets[name].length];
     nekoEl.style.backgroundPosition = `${sprite[0] * 32}px ${sprite[1] * 32}px`;
   }
@@ -215,43 +261,93 @@
   function idle(diffX, diffY) {
     idleTime += 1;
 
-    if (idleTime > 10 && Math.floor(Math.random() * 50) === 0 && idleAnimation == null) {
-      let available = ["sleeping", "scratchSelf"];
-      if (nekoPosX < scratchWallDistance) available.push("scratchWallW");
-      if (nekoPosY < scratchWallDistance) available.push("scratchWallN");
-      if (nekoPosX > window.innerWidth  - scratchWallDistance) available.push("scratchWallE");
-      if (nekoPosY > window.innerHeight - scratchWallDistance) available.push("scratchWallS");
-      idleAnimation = available[Math.floor(Math.random() * available.length)];
-
+    // every ~ 5 seconds
+    if (
+      idleTime > 10 &&
+      Math.floor(Math.random() * 50) == 0 &&
+      idleAnimation == null
+    ) {
+      let avalibleIdleAnimations = ["sleeping", "scratchSelf"];
+      if (nekoPosX < scratchWallDistance) {
+        avalibleIdleAnimations.push("scratchWallW");
+      }
+      if (nekoPosY < scratchWallDistance) {
+        avalibleIdleAnimations.push("scratchWallN");
+      }
+      if (nekoPosX > window.innerWidth - scratchWallDistance) {
+        avalibleIdleAnimations.push("scratchWallE");
+      }
+      if (nekoPosY > window.innerHeight - scratchWallDistance) {
+        avalibleIdleAnimations.push("scratchWallS");
+      }
+      idleAnimation =
+        avalibleIdleAnimations[
+          Math.floor(Math.random() * avalibleIdleAnimations.length)
+        ];
       if (idleAnimation?.startsWith("scratchWall")) {
-        if (idleAnimation === "scratchWallW") nekoPosX = 16;
-        if (idleAnimation === "scratchWallE") nekoPosX = window.innerWidth  - 16;
-        if (idleAnimation === "scratchWallN") nekoPosY = 16;
-        if (idleAnimation === "scratchWallS") nekoPosY = window.innerHeight - 16;
+        // Nudge the cat to the closest wall so the animation looks correct.
+        if (idleAnimation === "scratchWallW") {
+          nekoPosX = 16;
+        }
+        if (idleAnimation === "scratchWallE") {
+          nekoPosX = window.innerWidth - 16;
+        }
+        if (idleAnimation === "scratchWallN") {
+          nekoPosY = 16;
+        }
+        if (idleAnimation === "scratchWallS") {
+          nekoPosY = window.innerHeight - 16;
+        }
         nekoEl.style.left = `${nekoPosX - 16}px`;
-        nekoEl.style.top  = `${nekoPosY - 16}px`;
+        nekoEl.style.top = `${nekoPosY - 16}px`;
       }
     }
 
     switch (idleAnimation) {
       case "sleeping":
-        if (mouseButtonDown && Math.abs(diffX) < 32 && Math.abs(diffY) < 32) {
-          setSprite("heart", Math.floor(idleAnimationFrame / 4));
+        //if (idleAnimationFrame < 8) {
+        //  setSprite("tired", 0);
+        //  break;
+        //}
+
+        if (mouseButtonDown && diffY < 32 && diffY > -32 && diffX < 32 && diffX > -32) {
+            setSprite("heart", Math.floor(idleAnimationFrame / 4));
         } else {
-          setSprite("sleeping", Math.floor(idleAnimationFrame / 4));
+            // Usa apenas os frames de sono direto (2 frames que alternam)
+            setSprite("sleeping", Math.floor(idleAnimationFrame / 4));
         }
-        if (idleAnimationFrame > 999) idleAnimationFrame = 0;
+
+        // Aumentamos o limite para ele não "acordar" sozinho por tempo
+        if (idleAnimationFrame > 999) { 
+            idleAnimationFrame = 0; 
+        }
         break;
+
+        // check diffs to ensure pointer is on sprite - PETTING FUNCTIONALITY
+        // Expanded hitbox for easier petting
+        //if (mouseButtonDown && diffY < 32 && diffY > -32 && diffX < 32 && diffX > -32) {
+        //  setSprite("heart", Math.floor(idleAnimationFrame / 4));
+        //} else {
+        //  setSprite("sleeping", Math.floor(idleAnimationFrame / 4));
+        //}
+
+        //if (idleAnimationFrame > 192) {
+        //  resetIdleAnimation();
+        //}
+        //break;
       case "scratchWallN":
       case "scratchWallS":
       case "scratchWallE":
       case "scratchWallW":
       case "scratchSelf":
         setSprite(idleAnimation, idleAnimationFrame);
-        if (idleAnimationFrame > 9) resetIdleAnimation();
+        if (idleAnimationFrame > 9) {
+          resetIdleAnimation();
+        }
         break;
       default:
-        if (mouseButtonDown && Math.abs(diffX) < 32 && Math.abs(diffY) < 32) {
+        // If cat is idle and clicked on, make it go to sleep
+        if (mouseButtonDown && diffY < 32 && diffY > -32 && diffX < 32 && diffX > -32) {
           idleAnimation = "sleeping";
           idleAnimationFrame = 0;
           setSprite("tired", 0);
@@ -269,15 +365,16 @@
     const diffY = nekoPosY - mousePosY;
     const distance = Math.sqrt(diffX ** 2 + diffY ** 2);
 
+    // Se não estiver acordado, ele fica preso no loop de sono
     if (!isAwake) {
-      if (mouseButtonDown && Math.abs(diffX) < 32 && Math.abs(diffY) < 32) {
-        isAwake = true;
-        switchToAbsolute(); // troca para absolute ao acordar
-        resetIdleAnimation();
-      } else {
-        idle(diffX, diffY);
-        return;
-      }
+        // Se clicar no gato, ele acorda
+        if (mouseButtonDown && Math.abs(diffX) < 32 && Math.abs(diffY) < 32) {
+            isAwake = true;
+            resetIdleAnimation();
+        } else {
+            idle(diffX, diffY); // Mantém a animação de sono
+            return; // Impede o resto do código de rodar (não move)
+        }
     }
 
     if (distance < nekoSpeed || distance < 48) {
@@ -290,34 +387,39 @@
 
     if (idleTime > 1) {
       setSprite("alert", 0);
+      // count down after being alerted before moving
       idleTime = Math.min(idleTime, 7);
       idleTime -= 1;
       return;
     }
 
-    let direction = "";
-    direction += diffY / distance >  0.5 ? "N" : "";
+    let direction;
+    direction = diffY / distance > 0.5 ? "N" : "";
     direction += diffY / distance < -0.5 ? "S" : "";
-    direction += diffX / distance >  0.5 ? "W" : "";
+    direction += diffX / distance > 0.5 ? "W" : "";
     direction += diffX / distance < -0.5 ? "E" : "";
-    if (direction === "") direction = "idle";
-
+    if (direction === "") {
+      direction = "idle";
+    }
     setSprite(direction, frameCount);
 
     nekoPosX -= (diffX / distance) * nekoSpeed;
     nekoPosY -= (diffY / distance) * nekoSpeed;
 
-    nekoPosX = Math.min(Math.max(16, nekoPosX), document.documentElement.scrollWidth  - 16);
+    //nekoPosX = Math.min(Math.max(16, nekoPosX), window.innerWidth - 16);
+    //nekoPosY = Math.min(Math.max(16, nekoPosY), window.innerHeight - 16);
+    nekoPosX = Math.min(Math.max(16, nekoPosX), document.documentElement.scrollWidth - 16);
     nekoPosY = Math.min(Math.max(16, nekoPosY), document.documentElement.scrollHeight - 16);
 
     nekoEl.style.left = `${nekoPosX - 16}px`;
-    nekoEl.style.top  = `${nekoPosY - 16}px`;
+    nekoEl.style.top = `${nekoPosY - 16}px`;
   }
 
+  // Inicializa após DOM pronto para garantir que o título exista
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => init());
+    document.addEventListener('DOMContentLoaded', function() { setTimeout(init, 0); });
   } else {
-    init();
+    setTimeout(init, 0);
   }
 
 })();
