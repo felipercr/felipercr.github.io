@@ -55,23 +55,37 @@
   // absoluta no documento. Isso é correto desde que o navbar já exista no DOM.
   // O window.addEventListener("load") garante a correção após fontes/estilos.
 
+  // Sobe a árvore de offsetParent acumulando offsetTop/offsetLeft.
+  // Dá a posição ABSOLUTA no documento — imune a scrollY e ao bug
+  // da barra do browser mobile que altera o viewport sem gerar scroll.
+  function getOffsetFromBody(el) {
+    let top = 0, left = 0;
+    while (el && el !== document.body) {
+      top  += el.offsetTop;
+      left += el.offsetLeft;
+      el    = el.offsetParent;
+    }
+    return { top, left };
+  }
+
   function getAnchorAbsolutePos() {
     const h1 = document.querySelector('h1.post-title');
     if (!h1) return null;
+    if (h1.offsetWidth === 0 && h1.offsetHeight === 0) return null;
 
-    const r = h1.getBoundingClientRect();
-    if (r.width === 0 && r.height === 0) return null;
+    // Y: usa offsetTop acumulado — correto no mobile desde o primeiro frame
+    const off = getOffsetFromBody(h1);
 
-    // Mede onde o texto termina de verdade (não a borda do elemento,
-    // que ocupa 100% da largura mesmo com texto curto)
+    // X: usa Range para medir onde o texto termina (não a borda do elemento).
+    // scrollX horizontal não tem o bug do mobile, então a soma é segura.
     const range = document.createRange();
     range.selectNodeContents(h1);
     const textRect = range.getBoundingClientRect();
+    const textRight = textRect.right + window.scrollX;
 
-    // Posição absoluta no documento
     return {
-      x: textRect.right + window.scrollX + 8,
-      y: r.top + window.scrollY + r.height / 2,
+      x: textRight + 8,
+      y: off.top + h1.offsetHeight / 2,
     };
   }
 
