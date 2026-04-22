@@ -44,34 +44,34 @@
   };
 
   // ─── Posicionamento ─────────────────────────────────────────────────────────
-  // Usa offsetTop/offsetLeft acumulados para obter posição ABSOLUTA no documento.
-  // Isso é imune ao scroll e ao estado do viewport — não depende de scrollY nem
-  // de getBoundingClientRect, que são as fontes dos dois bugs.
-  function getAbsoluteOffset(el) {
-    let top = 0, left = 0;
-    while (el) {
-      top  += el.offsetTop;
-      left += el.offsetLeft;
-      el    = el.offsetParent;
-    }
-    return { top, left };
-  }
+  //
+  // Estratégia: getBoundingClientRect() + scrollY é a forma correta,
+  // MAS o tema al-folio aplica um padding-top no body via JS (para compensar
+  // o navbar fixed-top). Esse padding pode não estar aplicado ainda quando
+  // o script roda pela primeira vez, causando o offset para baixo.
+  //
+  // Solução: sempre ler a posição via getBoundingClientRect() (relativo ao
+  // viewport atual, já correto) e somar window.scrollY para obter posição
+  // absoluta no documento. Isso é correto desde que o navbar já exista no DOM.
+  // O window.addEventListener("load") garante a correção após fontes/estilos.
 
   function getAnchorAbsolutePos() {
-    const targetElement = document.querySelector('h1.post-title');
-    if (!targetElement) return null;
+    const h1 = document.querySelector('h1.post-title');
+    if (!h1) return null;
 
-    const boldSpan = targetElement.querySelector('.font-weight-bold');
-    const target   = boldSpan || targetElement;
+    const r = h1.getBoundingClientRect();
+    // Elemento ainda não renderizado
+    if (r.width === 0 && r.height === 0) return null;
 
-    // offsetWidth/Height sendo 0 indica que o elemento ainda não foi renderizado
-    if (target.offsetWidth === 0 && target.offsetHeight === 0) return null;
+    // Posição absoluta no documento
+    const absTop  = r.top  + window.scrollY;
+    const absLeft = r.left + window.scrollX;
 
-    const off  = getAbsoluteOffset(target);
-    const top  = off.top  + 20 + 5;
-    const left = off.left + (boldSpan ? target.offsetWidth + 10 : 20) + 190;
-
-    return { x: left, y: top };
+    // Posiciona à direita do texto do h1, alinhado verticalmente ao centro
+    return {
+      x: absLeft + r.width + 16,
+      y: absTop  + r.height / 2,
+    };
   }
 
   function applyPosition(x, y) {
@@ -113,8 +113,8 @@
     nekoEl.style.position = "absolute";
     nekoEl.style.pointerEvents = "auto";
     nekoEl.style.imageRendering = "pixelated";
-    nekoEl.style.left = `${nekoPosX - 16}px`;
-    nekoEl.style.top  = `${nekoPosY - 16}px`;
+    nekoEl.style.left = "-100px";
+    nekoEl.style.top  = "-100px";
     nekoEl.style.zIndex = 500;
     nekoEl.style.backgroundImage = `url(${nekoFile})`;
 
@@ -123,24 +123,30 @@
 
     document.body.appendChild(nekoEl);
 
-    // Posiciona imediatamente (sem setTimeout)
+    // Tenta posicionar já no DOMContentLoaded.
+    // Funciona se o navbar já tiver aplicado o padding-top.
     repositionToAnchor();
 
-    // Reposiciona quando tudo terminar de carregar (fontes, imagens que
-    // podem alterar a altura do layout e deslocar o título)
+    // Garante posição correta após load completo (fontes Google, estilos defer,
+    // navbar padding-top do al-folio — o que causar o offset é corrigido aqui).
     window.addEventListener("load", () => {
       if (!isAwake) repositionToAnchor();
     });
 
-    // Reposiciona em resize / rotação de tela
+    // Corrige após resize (rotação de tela, zoom)
     window.addEventListener("resize", () => {
       if (!isAwake) repositionToAnchor();
     });
 
-    // Scroll não precisa reposicionar — offsetTop é absoluto e não muda com scroll
-    // (mantemos só para garantir em casos extremos de layout dinâmico)
+    // No mobile, o primeiro scroll faz o browser recalcular o layout
+    // (barra de endereço some/aparece). Corrigimos uma única vez.
+    let firstScrollHandled = false;
     window.addEventListener("scroll", () => {
-      if (!isAwake) repositionToAnchor();
+      if (!isAwake && !firstScrollHandled) {
+        firstScrollHandled = true;
+        // rAF garante que o browser terminou de reposicionar tudo
+        requestAnimationFrame(() => repositionToAnchor());
+      }
     }, { passive: true });
 
     document.addEventListener("mousemove", function (event) {
