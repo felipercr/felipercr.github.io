@@ -25,75 +25,31 @@
   const spriteSets = {
     idle: [[-3, -3]],
     alert: [[-7, -3]],
-    scratchSelf: [
-      [-5, 0],
-      [-6, 0],
-      [-7, 0],
-    ],
-    scratchWallN: [
-      [0, 0],
-      [0, -1],
-    ],
-    scratchWallS: [
-      [-7, -1],
-      [-6, -2],
-    ],
-    scratchWallE: [
-      [-2, -2],
-      [-2, -3],
-    ],
-    scratchWallW: [
-      [-4, 0],
-      [-4, -1],
-    ],
+    scratchSelf: [[-5, 0], [-6, 0], [-7, 0]],
+    scratchWallN: [[0, 0], [0, -1]],
+    scratchWallS: [[-7, -1], [-6, -2]],
+    scratchWallE: [[-2, -2], [-2, -3]],
+    scratchWallW: [[-4, 0], [-4, -1]],
     tired: [[-3, -2]],
-    sleeping: [
-      [-2, 0],
-      [-2, -1],
-    ],
-    N: [
-      [-1, -2],
-      [-1, -3],
-    ],
-    NE: [
-      [0, -2],
-      [0, -3],
-    ],
-    E: [
-      [-3, 0],
-      [-3, -1],
-    ],
-    SE: [
-      [-5, -1],
-      [-5, -2],
-    ],
-    S: [
-      [-6, -3],
-      [-7, -2],
-    ],
-    SW: [
-      [-5, -3],
-      [-6, -1],
-    ],
-    W: [
-      [-4, -2],
-      [-4, -3],
-    ],
-    NW: [
-      [-1, 0],
-      [-1, -1],
-    ],
-    heart: [
-      [-8, 0],
-      [-8, -1],
-      [-8, -2],
-      [-8, -3],
-    ],
+    sleeping: [[-2, 0], [-2, -1]],
+    N:  [[-1, -2], [-1, -3]],
+    NE: [[0, -2],  [0, -3]],
+    E:  [[-3, 0],  [-3, -1]],
+    SE: [[-5, -1], [-5, -2]],
+    S:  [[-6, -3], [-7, -2]],
+    SW: [[-5, -3], [-6, -1]],
+    W:  [[-4, -2], [-4, -3]],
+    NW: [[-1, 0],  [-1, -1]],
+    heart: [[-8, 0], [-8, -1], [-8, -2], [-8, -3]],
   };
 
-  // ─── FIX 1 & 2: aguarda o elemento alvo estar estável antes de posicionar ───
-  // Tenta obter a posição do elemento. Retorna null se ainda não está pronto.
-  function getAnchorPosition() {
+  // ─── Posicionamento ────────────────────────────────────────────────────────
+
+  // Enquanto dormindo usamos position:fixed — relativo ao viewport.
+  // Isso elimina o bug do mobile onde window.scrollY=0 no load causa offset errado,
+  // e também o delay de "esperar layout estabilizar" porque getBoundingClientRect
+  // já é relativo ao viewport e é imediato.
+  function getAnchorViewportPos() {
     const targetElement = document.querySelector('h1.post-title');
     if (!targetElement) return null;
 
@@ -101,69 +57,37 @@
     const target = boldSpan || targetElement;
     const r = target.getBoundingClientRect();
 
-    // Se o elemento ainda não tem dimensões, o layout não terminou
     if (r.width === 0 && r.height === 0) return null;
 
-    const absoluteTop  = r.top  + window.scrollY + 20;
-    const absoluteLeft = (boldSpan ? r.right + 10 : r.left + 20) + window.scrollX + 190;
+    // Posição relativa ao VIEWPORT (funciona diretamente com position:fixed)
+    const top  = r.top + 20 + 5;
+    const left = (boldSpan ? r.right + 10 : r.left + 20) + 190;
 
-    return { x: absoluteLeft, y: absoluteTop + 5 };
+    return { x: left, y: top };
   }
 
-  // Aplica a posição ao elemento DOM
-  function applyNekoPosition(x, y) {
-    nekoPosX = x;
-    nekoPosY = y;
-    nekoEl.style.left = `${nekoPosX - 16}px`;
-    nekoEl.style.top  = `${nekoPosY - 16}px`;
+  function setFixedPosition(x, y) {
+    // Salva posição absoluta para uso quando acordar e trocar para absolute
+    nekoPosX = x + window.scrollX;
+    nekoPosY = y + window.scrollY;
+    nekoEl.style.left = `${x - 16}px`;
+    nekoEl.style.top  = `${y - 16}px`;
   }
 
   function repositionToAnchor() {
     if (isAwake) return;
-    const pos = getAnchorPosition();
+    const pos = getAnchorViewportPos();
     if (!pos) return;
-    applyNekoPosition(pos.x, pos.y);
+    setFixedPosition(pos.x, pos.y);
   }
 
-  // Espera o elemento estar pronto com posição estável e executa o callback.
-  // Usa um loop de rAF com verificação de estabilidade (2 leituras iguais).
-  function waitForStableAnchor(callback) {
-    let lastTop = -1;
-    let stableCount = 0;
-    const NEEDED_STABLE_FRAMES = 3; // quantos frames consecutivos com mesma posição
-    const MAX_ATTEMPTS = 120;       // ~2s a 60fps antes de desistir
-    let attempts = 0;
-
-    function check() {
-      attempts++;
-      const pos = getAnchorPosition();
-
-      if (pos) {
-        const top = Math.round(pos.y);
-        if (top === lastTop) {
-          stableCount++;
-        } else {
-          stableCount = 0;
-          lastTop = top;
-        }
-
-        if (stableCount >= NEEDED_STABLE_FRAMES) {
-          callback(pos);
-          return;
-        }
-      }
-
-      if (attempts < MAX_ATTEMPTS) {
-        requestAnimationFrame(check);
-      } else {
-        // Fallback: usa o que tiver mesmo sem estabilidade
-        if (pos) callback(pos);
-      }
-    }
-
-    requestAnimationFrame(check);
+  function switchToAbsolute() {
+    nekoEl.style.position = 'absolute';
+    nekoEl.style.left = `${nekoPosX - 16}px`;
+    nekoEl.style.top  = `${nekoPosY - 16}px`;
   }
-  // ─────────────────────────────────────────────────────────────────────────────
+
+  // ─── Init ──────────────────────────────────────────────────────────────────
 
   function init() {
     let nekoFile = "/assets/js/neko/neko.gif";
@@ -172,37 +96,25 @@
       nekoFile = curScript.dataset.cat;
     }
     if (curScript && curScript.dataset.persistPosition) {
-      if (curScript.dataset.persistPosition === "") {
-        persistPosition = true;
-      } else {
-        persistPosition = JSON.parse(curScript.dataset.persistPosition.toLowerCase());
-      }
-    }
-
-    if (persistPosition) {
-      const storedNeko = JSON.parse(window.localStorage.getItem("oneko"));
-      if (storedNeko) {
-        isAwake = storedNeko.isAwake || false;
-        idleAnimation = storedNeko.idleAnimation;
-      }
+      persistPosition = curScript.dataset.persistPosition === ""
+        ? true
+        : JSON.parse(curScript.dataset.persistPosition.toLowerCase());
     }
 
     idleAnimation = "sleeping";
     idleAnimationFrame = 0;
     isAwake = false;
 
-    // Monta o elemento com posição temporária (invisível até posicionarmos)
     nekoEl.id = "oneko";
     nekoEl.ariaHidden = true;
     nekoEl.style.width = "32px";
     nekoEl.style.height = "32px";
-    nekoEl.style.position = "absolute";
+    nekoEl.style.position = "fixed";   // começa fixed!
     nekoEl.style.pointerEvents = "auto";
     nekoEl.style.imageRendering = "pixelated";
-    nekoEl.style.left = `${nekoPosX - 16}px`;
-    nekoEl.style.top  = `${nekoPosY - 16}px`;
+    nekoEl.style.left = "-100px";      // fora da tela até posicionar
+    nekoEl.style.top  = "-100px";
     nekoEl.style.zIndex = 500;
-    nekoEl.style.visibility = "hidden"; // esconde até ter a posição certa
     nekoEl.style.backgroundImage = `url(${nekoFile})`;
 
     const initialSprite = spriteSets["sleeping"][0];
@@ -210,45 +122,58 @@
 
     document.body.appendChild(nekoEl);
 
-    // ── Aguarda posição estável e só então mostra o neko ──
-    waitForStableAnchor(function(pos) {
-      applyNekoPosition(pos.x, pos.y);
-      nekoEl.style.visibility = "visible"; // aparece já no lugar certo
-    });
+    // Posiciona imediatamente — sem setTimeout, sem esperar load
+    const pos = getAnchorViewportPos();
+    if (pos) {
+      setFixedPosition(pos.x, pos.y);
+    }
 
-    // Reposiciona no resize/scroll enquanto dormindo
-    window.addEventListener("resize", () => {
-      if (!isAwake) repositionToAnchor();
-    });
-
-    window.addEventListener("scroll", () => {
-      if (!isAwake) window.requestAnimationFrame(repositionToAnchor);
-    }, { passive: true });
-
-    // Reposiciona após load completo (imagens, fontes web, etc.)
+    // Reposiciona quando fontes/imagens terminarem (pode mudar altura do título)
     window.addEventListener("load", () => {
       if (!isAwake) repositionToAnchor();
     });
 
+    // Reposiciona em resize (rotação de tela, janela redimensionada)
+    window.addEventListener("resize", () => {
+      if (!isAwake) repositionToAnchor();
+    });
+
+    // Scroll: atualiza nekoPosX/Y absolutos para quando acordar.
+    // Não precisa mover o elemento pois está fixed.
+    window.addEventListener("scroll", () => {
+      if (!isAwake) {
+        nekoPosX = parseFloat(nekoEl.style.left) + 16 + window.scrollX;
+        nekoPosY = parseFloat(nekoEl.style.top)  + 16 + window.scrollY;
+      }
+    }, { passive: true });
+
+    // Mouse
     document.addEventListener("mousemove", function (event) {
       mousePosX = event.clientX + window.pageXOffset;
       mousePosY = event.clientY + window.pageYOffset;
     });
-
     document.addEventListener("mousedown", toggleMouseState);
-    document.addEventListener("mouseup", toggleMouseState);
+    document.addEventListener("mouseup",   toggleMouseState);
+
+    // Touch (mobile)
+    document.addEventListener("touchmove", function (event) {
+      const t = event.touches[0];
+      mousePosX = t.clientX + window.pageXOffset;
+      mousePosY = t.clientY + window.pageYOffset;
+    }, { passive: true });
+    document.addEventListener("touchstart", function (event) {
+      const t = event.touches[0];
+      mousePosX = t.clientX + window.pageXOffset;
+      mousePosY = t.clientY + window.pageYOffset;
+      mouseButtonDown = true;
+    }, { passive: true });
+    document.addEventListener("touchend", () => { mouseButtonDown = false; }, { passive: true });
 
     if (persistPosition) {
       window.addEventListener("beforeunload", function () {
         window.localStorage.setItem("oneko", JSON.stringify({
-          nekoPosX: nekoPosX,
-          nekoPosY: nekoPosY,
-          mousePosX: mousePosX,
-          mousePosY: mousePosY,
-          frameCount: frameCount,
-          idleTime: idleTime,
-          idleAnimation: idleAnimation,
-          idleAnimationFrame: idleAnimationFrame,
+          nekoPosX, nekoPosY, mousePosX, mousePosY,
+          frameCount, idleTime, idleAnimation, idleAnimationFrame,
           bgPos: nekoEl.style.backgroundPosition,
         }));
       });
@@ -256,6 +181,8 @@
 
     window.requestAnimationFrame(onAnimationFrame);
   }
+
+  // ─── Animação ──────────────────────────────────────────────────────────────
 
   function toggleMouseState(e) {
     const flags = e.buttons !== undefined ? e.buttons : e.which;
@@ -275,10 +202,7 @@
   }
 
   function setSprite(name, frame) {
-    if (!spriteSets[name]) {
-      console.warn(`Unknown sprite direction: "${name}", defaulting to idle`);
-      name = "idle";
-    }
+    if (!spriteSets[name]) { name = "idle"; }
     const sprite = spriteSets[name][frame % spriteSets[name].length];
     nekoEl.style.backgroundPosition = `${sprite[0] * 32}px ${sprite[1] * 32}px`;
   }
@@ -291,22 +215,17 @@
   function idle(diffX, diffY) {
     idleTime += 1;
 
-    if (
-      idleTime > 10 &&
-      Math.floor(Math.random() * 50) === 0 &&
-      idleAnimation == null
-    ) {
-      let avalibleIdleAnimations = ["sleeping", "scratchSelf"];
-      if (nekoPosX < scratchWallDistance) avalibleIdleAnimations.push("scratchWallW");
-      if (nekoPosY < scratchWallDistance) avalibleIdleAnimations.push("scratchWallN");
-      if (nekoPosX > window.innerWidth - scratchWallDistance) avalibleIdleAnimations.push("scratchWallE");
-      if (nekoPosY > window.innerHeight - scratchWallDistance) avalibleIdleAnimations.push("scratchWallS");
-
-      idleAnimation = avalibleIdleAnimations[Math.floor(Math.random() * avalibleIdleAnimations.length)];
+    if (idleTime > 10 && Math.floor(Math.random() * 50) === 0 && idleAnimation == null) {
+      let available = ["sleeping", "scratchSelf"];
+      if (nekoPosX < scratchWallDistance) available.push("scratchWallW");
+      if (nekoPosY < scratchWallDistance) available.push("scratchWallN");
+      if (nekoPosX > window.innerWidth  - scratchWallDistance) available.push("scratchWallE");
+      if (nekoPosY > window.innerHeight - scratchWallDistance) available.push("scratchWallS");
+      idleAnimation = available[Math.floor(Math.random() * available.length)];
 
       if (idleAnimation?.startsWith("scratchWall")) {
         if (idleAnimation === "scratchWallW") nekoPosX = 16;
-        if (idleAnimation === "scratchWallE") nekoPosX = window.innerWidth - 16;
+        if (idleAnimation === "scratchWallE") nekoPosX = window.innerWidth  - 16;
         if (idleAnimation === "scratchWallN") nekoPosY = 16;
         if (idleAnimation === "scratchWallS") nekoPosY = window.innerHeight - 16;
         nekoEl.style.left = `${nekoPosX - 16}px`;
@@ -316,14 +235,13 @@
 
     switch (idleAnimation) {
       case "sleeping":
-        if (mouseButtonDown && diffY < 32 && diffY > -32 && diffX < 32 && diffX > -32) {
+        if (mouseButtonDown && Math.abs(diffX) < 32 && Math.abs(diffY) < 32) {
           setSprite("heart", Math.floor(idleAnimationFrame / 4));
         } else {
           setSprite("sleeping", Math.floor(idleAnimationFrame / 4));
         }
         if (idleAnimationFrame > 999) idleAnimationFrame = 0;
         break;
-
       case "scratchWallN":
       case "scratchWallS":
       case "scratchWallE":
@@ -332,9 +250,8 @@
         setSprite(idleAnimation, idleAnimationFrame);
         if (idleAnimationFrame > 9) resetIdleAnimation();
         break;
-
       default:
-        if (mouseButtonDown && diffY < 32 && diffY > -32 && diffX < 32 && diffX > -32) {
+        if (mouseButtonDown && Math.abs(diffX) < 32 && Math.abs(diffY) < 32) {
           idleAnimation = "sleeping";
           idleAnimationFrame = 0;
           setSprite("tired", 0);
@@ -355,6 +272,7 @@
     if (!isAwake) {
       if (mouseButtonDown && Math.abs(diffX) < 32 && Math.abs(diffY) < 32) {
         isAwake = true;
+        switchToAbsolute(); // troca para absolute ao acordar
         resetIdleAnimation();
       } else {
         idle(diffX, diffY);
@@ -378,9 +296,9 @@
     }
 
     let direction = "";
-    direction += diffY / distance > 0.5  ? "N" : "";
+    direction += diffY / distance >  0.5 ? "N" : "";
     direction += diffY / distance < -0.5 ? "S" : "";
-    direction += diffX / distance > 0.5  ? "W" : "";
+    direction += diffX / distance >  0.5 ? "W" : "";
     direction += diffX / distance < -0.5 ? "E" : "";
     if (direction === "") direction = "idle";
 
@@ -397,9 +315,9 @@
   }
 
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', function() { setTimeout(init, 0); });
+    document.addEventListener('DOMContentLoaded', () => init());
   } else {
-    setTimeout(init, 0);
+    init();
   }
 
 })();
