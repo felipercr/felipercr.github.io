@@ -493,6 +493,11 @@ ninja.data = [{
           description: "",
           section: "Albums",handler: () => {
               window.location.href = "/albums/ff/";
+            },},{id: "albums-frogstomp",
+          title: 'Frogstomp',
+          description: "",
+          section: "Albums",handler: () => {
+              window.location.href = "/albums/frogstomp/";
             },},{id: "albums-great-western-valkyre",
           title: 'Great Western Valkyre',
           description: "",
@@ -523,6 +528,11 @@ ninja.data = [{
           description: "",
           section: "Albums",handler: () => {
               window.location.href = "/albums/kiss-me/";
+            },},{id: "albums-live-through-this",
+          title: 'Live Through This',
+          description: "",
+          section: "Albums",handler: () => {
+              window.location.href = "/albums/live-through-this/";
             },},{id: "albums-loveless",
           title: 'Loveless',
           description: "",
@@ -553,6 +563,11 @@ ninja.data = [{
           description: "",
           section: "Albums",handler: () => {
               window.location.href = "/albums/ok-computer/";
+            },},{id: "albums-open-your-eyes",
+          title: 'Open Your Eyes',
+          description: "",
+          section: "Albums",handler: () => {
+              window.location.href = "/albums/open-your-eyes/";
             },},{id: "albums-pet-your-friends",
           title: 'Pet Your Friends',
           description: "",
@@ -593,6 +608,11 @@ ninja.data = [{
           description: "",
           section: "Albums",handler: () => {
               window.location.href = "/albums/super-extra-gravity/";
+            },},{id: "albums-superunknown",
+          title: 'Superunknown',
+          description: "",
+          section: "Albums",handler: () => {
+              window.location.href = "/albums/superunknown/";
             },},{id: "albums-the-bends",
           title: 'The Bends',
           description: "",
