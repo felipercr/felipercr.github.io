@@ -43,21 +43,9 @@
     heart: [[-8, 0], [-8, -1], [-8, -2], [-8, -3]],
   };
 
-  // ─── Posicionamento ─────────────────────────────────────────────────────────
-  //
-  // Estratégia: getBoundingClientRect() + scrollY é a forma correta,
-  // MAS o tema al-folio aplica um padding-top no body via JS (para compensar
-  // o navbar fixed-top). Esse padding pode não estar aplicado ainda quando
-  // o script roda pela primeira vez, causando o offset para baixo.
-  //
-  // Solução: sempre ler a posição via getBoundingClientRect() (relativo ao
-  // viewport atual, já correto) e somar window.scrollY para obter posição
-  // absoluta no documento. Isso é correto desde que o navbar já exista no DOM.
-  // O window.addEventListener("load") garante a correção após fontes/estilos.
+ 
+  
 
-  // Sobe a árvore de offsetParent acumulando offsetTop/offsetLeft.
-  // Dá a posição ABSOLUTA no documento — imune a scrollY e ao bug
-  // da barra do browser mobile que altera o viewport sem gerar scroll.
   function getOffsetFromBody(el) {
     let top = 0, left = 0;
     while (el && el !== document.body) {
@@ -73,19 +61,15 @@
     if (!h1) return null;
     if (h1.offsetWidth === 0 && h1.offsetHeight === 0) return null;
 
-    // Y: usa offsetTop acumulado — correto no mobile desde o primeiro frame
-    const off = getOffsetFromBody(h1);
+    const rect = h1.getBoundingClientRect();
 
-    // X: usa Range para medir onde o texto termina (não a borda do elemento).
-    // scrollX horizontal não tem o bug do mobile, então a soma é segura.
     const range = document.createRange();
     range.selectNodeContents(h1);
     const textRect = range.getBoundingClientRect();
-    const textRight = textRect.right + window.scrollX;
 
     return {
-      x: textRight + 8,
-      y: off.top + h1.offsetHeight / 2,
+      x: textRect.right + window.scrollX + 8,
+      y: rect.top + window.scrollY + h1.offsetHeight / 2, 
     };
   }
 
