@@ -48,11 +48,17 @@
     if (!h1) return null;
     if (h1.offsetWidth === 0 && h1.offsetHeight === 0) return null;
 
-    const rect = h1.getBoundingClientRect();
+    const range = document.createRange();
+    range.selectNodeContents(h1);
+    const rects = range.getClientRects();
+    if (!rects.length) return null;
+
+    // último rect = última linha do texto
+    const lastRect = rects[rects.length - 1];
 
     return {
-      x: rect.right + window.scrollX + 8,
-      y: rect.top + window.scrollY + rect.height / 2,
+      x: lastRect.right + window.scrollX + 8,
+      y: lastRect.top  + window.scrollY + lastRect.height / 2,
     };
   }
 
