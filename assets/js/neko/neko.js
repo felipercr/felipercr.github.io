@@ -53,7 +53,6 @@
     const rects = range.getClientRects();
     if (!rects.length) return null;
 
-    // último rect = última linha do texto
     const lastRect = rects[rects.length - 1];
 
     return {
