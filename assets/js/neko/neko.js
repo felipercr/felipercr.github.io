@@ -56,8 +56,8 @@
     const lastRect = rects[rects.length - 1];
 
     return {
-      x: lastRect.right + window.scrollX + 8,
-      y: lastRect.top  + window.scrollY + lastRect.height / 2,
+      x: lastRect.right + window.scrollX + 18,
+      y: lastRect.top  + window.scrollY + lastRect.height / 2 + 10,
     };
   }
 
@@ -128,6 +128,23 @@
     });
     document.addEventListener("mousedown", toggleMouseState);
     document.addEventListener("mouseup",   toggleMouseState);
+
+    document.addEventListener("touchstart", function (event) {
+      const touch = event.touches[0];
+      mousePosX = touch.clientX + window.pageXOffset;
+      mousePosY = touch.clientY + window.pageYOffset;
+      mouseButtonDown = true;
+    }, { passive: true });
+
+    document.addEventListener("touchmove", function (event) {
+      const touch = event.touches[0];
+      mousePosX = touch.clientX + window.pageXOffset;
+      mousePosY = touch.clientY + window.pageYOffset;
+    }, { passive: true });
+
+    document.addEventListener("touchend", function () {
+      mouseButtonDown = false;
+    }, { passive: true });
 
     if (persistPosition) {
       window.addEventListener("beforeunload", function () {
