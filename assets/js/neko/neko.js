@@ -43,35 +43,16 @@
     heart: [[-8, 0], [-8, -1], [-8, -2], [-8, -3]],
   };
 
- 
-  
-
-  function getOffsetFromBody(el) {
-    let top = 0, left = 0;
-    while (el && el !== document.body) {
-      top  += el.offsetTop;
-      left += el.offsetLeft;
-      el    = el.offsetParent;
-    }
-    return { top, left };
-  }
-
   function getAnchorAbsolutePos() {
     const h1 = document.querySelector('h1.post-title');
     if (!h1) return null;
     if (h1.offsetWidth === 0 && h1.offsetHeight === 0) return null;
 
-    const range = document.createRange();
-    range.selectNodeContents(h1);
-    const rects = range.getClientRects(); // um rect por linha
-    if (!rects.length) return null;
-
-    // última linha do texto
-    const lastRect = rects[rects.length - 1];
+    const rect = h1.getBoundingClientRect();
 
     return {
-      x: lastRect.right + window.scrollX + 8,
-      y: lastRect.top + window.scrollY + lastRect.height / 2, // centro da última linha
+      x: rect.right + window.scrollX + 8,
+      y: rect.top + window.scrollY + rect.height / 2,
     };
   }
 
@@ -124,31 +105,17 @@
 
     document.body.appendChild(nekoEl);
 
-    // Tenta posicionar já no DOMContentLoaded.
-    // Funciona se o navbar já tiver aplicado o padding-top.
-    repositionToAnchor();
-
-    // Garante posição correta após load completo (fontes Google, estilos defer,
-    // navbar padding-top do al-folio — o que causar o offset é corrigido aqui).
+    // Posiciona uma única vez após o layout estar completamente estável
     window.addEventListener("load", () => {
-      if (!isAwake) repositionToAnchor();
+      if (!isAwake) {
+        setTimeout(() => repositionToAnchor(), 300);
+      }
     });
 
     // Corrige após resize (rotação de tela, zoom)
     window.addEventListener("resize", () => {
       if (!isAwake) repositionToAnchor();
     });
-
-    // No mobile, o primeiro scroll faz o browser recalcular o layout
-    // (barra de endereço some/aparece). Corrigimos uma única vez.
-    let firstScrollHandled = false;
-    window.addEventListener("scroll", () => {
-      if (!isAwake && !firstScrollHandled) {
-        firstScrollHandled = true;
-        // rAF garante que o browser terminou de reposicionar tudo
-        requestAnimationFrame(() => repositionToAnchor());
-      }
-    }, { passive: true });
 
     document.addEventListener("mousemove", function (event) {
       mousePosX = event.clientX + window.pageXOffset;
