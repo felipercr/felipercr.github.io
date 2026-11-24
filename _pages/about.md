@@ -2,7 +2,7 @@
 layout: about
 title: About
 permalink: /
-subtitle: R&D Engineer - Signal Processing | Computer Science | Applied Mathematics # <a href='#'>Affiliations</a>. Address. Contacts. Motto. Etc.
+subtitle: Signal Processing | Computer Science | Applied Mathematics # <a href='#'>Affiliations</a>. Address. Contacts. Motto. Etc.
 neko: true
 
 profile:
@@ -27,26 +27,23 @@ latest_posts:
 ---
 
 ### Bio
-Master's degree in **computer science** at the [Institut Polytechnique de Paris](https://www.ip-paris.fr/) given at [École Polytechnique](https://www.polytechnique.edu/) (Paris, FR), master of engineering in **telecommunications** at [Télécom SudParis](https://www.telecom-sudparis.eu/) (Paris, FR), and bachelor in **electrical engineering** (5 years course) at the [Federal University of Minas Gerais](https://www.ufmg.br/) (Belo Horizonte, BR). I also spent a term at the [University of Jyväskylä](https://www.jyu.fi/en) (Jyväskylä, FI) doing master-level courses at the computer science department.
+I'm a computer scientist and engineer focused on signal processing, computer science and applied mathematics. I hold a master's degree in **computer science** from the [Institut Polytechnique de Paris](https://www.ip-paris.fr/) given at [École Polytechnique](https://www.polytechnique.edu/) (Paris, FR), a French master of engineering in **telecommunications** from [Télécom SudParis](https://www.telecom-sudparis.eu/) (Paris, FR), and a bachelor's degree in **electrical engineering** (5-year program) from the [Federal University of Minas Gerais](https://www.ufmg.br/) (Belo Horizonte, BR). I also spent a term at the [University of Jyväskylä](https://www.jyu.fi/en) (Jyväskylä, FI) doing master-level courses at the computer science department.
 
-My main interests are in **𝗰𝗼𝗺𝗽𝘂𝘁𝗲𝗿 𝘀𝗰𝗶𝗲𝗻𝗰𝗲** 🌐🚀 (optimization, mathematical programming, high performance computing, ...), **𝘀𝗶𝗴𝗻𝗮𝗹 𝗽𝗿𝗼𝗰𝗲𝘀𝘀𝗶𝗻𝗴** 📡🛰️ (filters, time series, images, radar, sensors, audio...) and the uses of **𝗔𝗜/𝗠𝗟** in these fields 🧠🧩.
+My main interests are in **mathematical computer science** 🌐🚀 (optimization, graphs, neural networks, high performance computing, ...), **signal processing** 📡🛰️ (filters, time series, images, radar, sensors, audio, ...) and the uses of **AI/ML** in these fields 🧠🧩.
 
-I study novel signal processing techniques and their applications in different environments, such as aviation, banking, radars, imaging and others.
+I study novel signal processing techniques and their applications in different environments, such as aviation, finance, radars, imaging and others.
 
 ### Research interests 
  - Signal and statistical signal processing
  - Optimization
  - Neural networks / Machine learning / AI
- - Compressive sensing and sparse models 
- - Dictionary learning
  - Time series analysis and predictions
+ - Stochastic processes
+ - Compressive sensing and sparse models
  - High performance computing
- - Radars / Sonars
- - Audio
- - Optical / Radio communications
 
 ### Languages
-Fluent in english, french, portuguese and spanish.
+Fluent in English, French, Portuguese and Spanish.
 
-### Center of interest
-I also play guitar as a hobby 🎸🎶.
+### Personal interests
+I also play guitar as a hobby. 🎸🎶
