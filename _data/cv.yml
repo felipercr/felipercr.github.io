@@ -4,7 +4,7 @@ cv:
   email: felipercr.eng@gmail.com
   location: Belo Horizonte, BR
   image: ""
-  summary: A Brazilian-born engineer and computer scientist specialized in signal processing, mathematical computer science and cyber-physical systems.
+  summary: A Brazilian-born engineer and computer scientist specialized in signal processing, computer science and applied mathematics.
 
   #social_networks:
   #  - network: X
@@ -33,7 +33,7 @@ cv:
         courses: "Formal verification of AI, Explainable and trustworthy AI, Advanced optimization, Numerical methods, Distributed systems, Critical real-time systems, Control theory, Formal verification."
         highlights:
           - Followed the "Cyber-physical systems" track.
-          - Master's degree partner of the chair of Chair in Complex Systems Architecture of IP Paris (https://www.youtube.com/watch?v=0xTQZIvvYIE), with focus in defense and security.
+          - Partner master's program of the Chair in Complex Systems Architecture of IP Paris (https://www.youtube.com/watch?v=0xTQZIvvYIE), with focus in defense and security.
 
       - institution: Institut Polytechnique de Paris - Télécom SudParis
         location: Paris, France
@@ -42,7 +42,7 @@ cv:
         studyType: Master of engineering
         start_date: 2024
         end_date: 2026
-        courses: "Graph science, Applied probability, Markov models, Image processing, Operational systems, Low-level programming, Radio and optical communications."
+        courses: "Graph science, Applied probability, Markov models, Image processing, Operating systems, Low-level programming, Radio and optical communications."
         highlights:
           - Double-degree program of academic excellence with the Federal University of Minas Gerais.
 
@@ -62,19 +62,20 @@ cv:
         studyType: Bachelor's degree
         start_date: 2020
         end_date: 2026
-        courses: "Signal processing, Analog and digital electronics, Communication systems, Control systems."
+        courses: "Stochastic processes, Signal processing, Electronics, Communication systems, Control systems."
         highlights:
-          - Double-degree program of academic excellence at the Institute Polytechnique de Paris.
+          - Double-degree program of academic excellence at the Institut Polytechnique de Paris.
 
     Experience:
       - company: Nokia Bell Labs
-        position: Master thesis
+        position: Master's thesis
         location: Paris, France
         start_date: 2026
         end_date: 2026
         highlights:
-          - Study and implementation of the CV-QKD protocol on GPUs. 
-          - Signal processing, optimization, stochastic analysis and high-performance computing.
+          - Study and implementation of quantum cryptography's CV-QKD protocol. 
+          - GPU/CUDA implementations of signal processing algorithms (adaptive filters, channel equalizers, etc.) and linear error-correcting codes.
+          - Real-time signal acquisition and processing.
 
       - company: Télécom SudParis
         position: Research internship
@@ -137,13 +138,13 @@ cv:
           - Validation of a method for calculating error of stochastic neutronic simulations.
           - Co-writer of “Investigation of discretization uncertainty in Monte Carlo neutron transport simulations of the Molten Salt Fast Reactor”.
 
-    #Volunteer:
-    #  - company: People's Climate March
-    #    position: Lead Organizer
+    Volunteer:
+      - company: IEEE's ICASSP conference
+        position: Peer reviewer
     #    location: Zurich, Switzerland
-    #    start_date: 2014-04-01
-    #    end_date: 2015-07-01
-    #    summary: Lead organizer for the New York City branch of the People's Climate March, the largest climate march in history.
+        start_date: 2025
+        end_date: present
+        summary: Peer reviewer of Integrating signal processing and computing [AS-CMP] and Signal processing application systems [AS-APP].
     #    highlights:
     #      - "Awarded 'Climate Hero' award by Greenpeace for my efforts organizing the march."
     #      - "Men of the year 2014 by Time magazine"
