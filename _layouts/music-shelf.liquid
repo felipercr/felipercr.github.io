@@ -7,23 +7,23 @@ layout: page
   {% assign collection = site[page.collection] %}
   {% if collection and collection.size > 0 %}
     <ul>
-    {% for item in collection %}
-      <figure class="cover">
-        {% if item.spotify_url %}
-          <a class="cover-link" href="{{ item.spotify_url }}" target="_blank" rel="noopener noreferrer">
-        {% else %}
-          <div class="cover-link">
-        {% endif %}
+      {% for item in collection %}
+        <figure class="cover">
+          {% if item.spotify_url %}
+            <a class="cover-link" href="{{ item.spotify_url }}" target="_blank" rel="noopener noreferrer">
+          {% else %}
+            <div class="cover-link">
+          {% endif %}
           {% if item.cover %}
             <img alt="{{ item.title }}" src="{{ item.cover | prepend: page.covers | relative_url }}" style="height:200px">
           {% endif %}
-        {% if item.spotify_url %}
-          </a>
-        {% else %}
-          </div>
-        {% endif %}
-      </figure>
-    {% endfor %}
+          {% if item.spotify_url %}
+            </a>
+          {% else %}
+            </div>
+          {% endif %}
+        </figure>
+      {% endfor %}
     </ul>
   {% endif %}
 {% endif %}

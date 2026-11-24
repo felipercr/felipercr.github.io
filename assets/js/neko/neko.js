@@ -25,26 +25,74 @@
   const spriteSets = {
     idle: [[-3, -3]],
     alert: [[-7, -3]],
-    scratchSelf: [[-5, 0], [-6, 0], [-7, 0]],
-    scratchWallN: [[0, 0], [0, -1]],
-    scratchWallS: [[-7, -1], [-6, -2]],
-    scratchWallE: [[-2, -2], [-2, -3]],
-    scratchWallW: [[-4, 0], [-4, -1]],
+    scratchSelf: [
+      [-5, 0],
+      [-6, 0],
+      [-7, 0],
+    ],
+    scratchWallN: [
+      [0, 0],
+      [0, -1],
+    ],
+    scratchWallS: [
+      [-7, -1],
+      [-6, -2],
+    ],
+    scratchWallE: [
+      [-2, -2],
+      [-2, -3],
+    ],
+    scratchWallW: [
+      [-4, 0],
+      [-4, -1],
+    ],
     tired: [[-3, -2]],
-    sleeping: [[-2, 0], [-2, -1]],
-    N:  [[-1, -2], [-1, -3]],
-    NE: [[0, -2],  [0, -3]],
-    E:  [[-3, 0],  [-3, -1]],
-    SE: [[-5, -1], [-5, -2]],
-    S:  [[-6, -3], [-7, -2]],
-    SW: [[-5, -3], [-6, -1]],
-    W:  [[-4, -2], [-4, -3]],
-    NW: [[-1, 0],  [-1, -1]],
-    heart: [[-8, 0], [-8, -1], [-8, -2], [-8, -3]],
+    sleeping: [
+      [-2, 0],
+      [-2, -1],
+    ],
+    N: [
+      [-1, -2],
+      [-1, -3],
+    ],
+    NE: [
+      [0, -2],
+      [0, -3],
+    ],
+    E: [
+      [-3, 0],
+      [-3, -1],
+    ],
+    SE: [
+      [-5, -1],
+      [-5, -2],
+    ],
+    S: [
+      [-6, -3],
+      [-7, -2],
+    ],
+    SW: [
+      [-5, -3],
+      [-6, -1],
+    ],
+    W: [
+      [-4, -2],
+      [-4, -3],
+    ],
+    NW: [
+      [-1, 0],
+      [-1, -1],
+    ],
+    heart: [
+      [-8, 0],
+      [-8, -1],
+      [-8, -2],
+      [-8, -3],
+    ],
   };
 
   function getAnchorAbsolutePos() {
-    const h1 = document.querySelector('h1.post-title');
+    const h1 = document.querySelector("h1.post-title");
     if (!h1) return null;
     if (h1.offsetWidth === 0 && h1.offsetHeight === 0) return null;
 
@@ -57,7 +105,7 @@
 
     return {
       x: lastRect.right + window.scrollX + 18,
-      y: lastRect.top  + window.scrollY + lastRect.height / 2 + 10,
+      y: lastRect.top + window.scrollY + lastRect.height / 2 + 10,
     };
   }
 
@@ -65,7 +113,7 @@
     nekoPosX = x;
     nekoPosY = y;
     nekoEl.style.left = `${nekoPosX - 16}px`;
-    nekoEl.style.top  = `${nekoPosY - 16}px`;
+    nekoEl.style.top = `${nekoPosY - 16}px`;
   }
 
   function repositionToAnchor() {
@@ -84,9 +132,7 @@
       nekoFile = curScript.dataset.cat;
     }
     if (curScript && curScript.dataset.persistPosition) {
-      persistPosition = curScript.dataset.persistPosition === ""
-        ? true
-        : JSON.parse(curScript.dataset.persistPosition.toLowerCase());
+      persistPosition = curScript.dataset.persistPosition === "" ? true : JSON.parse(curScript.dataset.persistPosition.toLowerCase());
     }
 
     idleAnimation = "sleeping";
@@ -95,13 +141,13 @@
 
     nekoEl.id = "oneko";
     nekoEl.ariaHidden = true;
-    nekoEl.style.width  = "32px";
+    nekoEl.style.width = "32px";
     nekoEl.style.height = "32px";
     nekoEl.style.position = "absolute";
     nekoEl.style.pointerEvents = "auto";
     nekoEl.style.imageRendering = "pixelated";
     nekoEl.style.left = "-100px";
-    nekoEl.style.top  = "-100px";
+    nekoEl.style.top = "-100px";
     nekoEl.style.zIndex = 500;
     nekoEl.style.backgroundImage = `url(${nekoFile})`;
 
@@ -127,32 +173,53 @@
       mousePosY = event.clientY + window.pageYOffset;
     });
     document.addEventListener("mousedown", toggleMouseState);
-    document.addEventListener("mouseup",   toggleMouseState);
+    document.addEventListener("mouseup", toggleMouseState);
 
-    document.addEventListener("touchstart", function (event) {
-      const touch = event.touches[0];
-      mousePosX = touch.clientX + window.pageXOffset;
-      mousePosY = touch.clientY + window.pageYOffset;
-      mouseButtonDown = true;
-    }, { passive: true });
+    document.addEventListener(
+      "touchstart",
+      function (event) {
+        const touch = event.touches[0];
+        mousePosX = touch.clientX + window.pageXOffset;
+        mousePosY = touch.clientY + window.pageYOffset;
+        mouseButtonDown = true;
+      },
+      { passive: true }
+    );
 
-    document.addEventListener("touchmove", function (event) {
-      const touch = event.touches[0];
-      mousePosX = touch.clientX + window.pageXOffset;
-      mousePosY = touch.clientY + window.pageYOffset;
-    }, { passive: true });
+    document.addEventListener(
+      "touchmove",
+      function (event) {
+        const touch = event.touches[0];
+        mousePosX = touch.clientX + window.pageXOffset;
+        mousePosY = touch.clientY + window.pageYOffset;
+      },
+      { passive: true }
+    );
 
-    document.addEventListener("touchend", function () {
-      mouseButtonDown = false;
-    }, { passive: true });
+    document.addEventListener(
+      "touchend",
+      function () {
+        mouseButtonDown = false;
+      },
+      { passive: true }
+    );
 
     if (persistPosition) {
       window.addEventListener("beforeunload", function () {
-        window.localStorage.setItem("oneko", JSON.stringify({
-          nekoPosX, nekoPosY, mousePosX, mousePosY,
-          frameCount, idleTime, idleAnimation, idleAnimationFrame,
-          bgPos: nekoEl.style.backgroundPosition,
-        }));
+        window.localStorage.setItem(
+          "oneko",
+          JSON.stringify({
+            nekoPosX,
+            nekoPosY,
+            mousePosX,
+            mousePosY,
+            frameCount,
+            idleTime,
+            idleAnimation,
+            idleAnimationFrame,
+            bgPos: nekoEl.style.backgroundPosition,
+          })
+        );
       });
     }
 
@@ -179,7 +246,9 @@
   }
 
   function setSprite(name, frame) {
-    if (!spriteSets[name]) { name = "idle"; }
+    if (!spriteSets[name]) {
+      name = "idle";
+    }
     const sprite = spriteSets[name][frame % spriteSets[name].length];
     nekoEl.style.backgroundPosition = `${sprite[0] * 32}px ${sprite[1] * 32}px`;
   }
@@ -196,17 +265,17 @@
       let available = ["sleeping", "scratchSelf"];
       if (nekoPosX < scratchWallDistance) available.push("scratchWallW");
       if (nekoPosY < scratchWallDistance) available.push("scratchWallN");
-      if (nekoPosX > window.innerWidth  - scratchWallDistance) available.push("scratchWallE");
+      if (nekoPosX > window.innerWidth - scratchWallDistance) available.push("scratchWallE");
       if (nekoPosY > window.innerHeight - scratchWallDistance) available.push("scratchWallS");
       idleAnimation = available[Math.floor(Math.random() * available.length)];
 
       if (idleAnimation?.startsWith("scratchWall")) {
         if (idleAnimation === "scratchWallW") nekoPosX = 16;
-        if (idleAnimation === "scratchWallE") nekoPosX = window.innerWidth  - 16;
+        if (idleAnimation === "scratchWallE") nekoPosX = window.innerWidth - 16;
         if (idleAnimation === "scratchWallN") nekoPosY = 16;
         if (idleAnimation === "scratchWallS") nekoPosY = window.innerHeight - 16;
         nekoEl.style.left = `${nekoPosX - 16}px`;
-        nekoEl.style.top  = `${nekoPosY - 16}px`;
+        nekoEl.style.top = `${nekoPosY - 16}px`;
       }
     }
 
@@ -272,9 +341,9 @@
     }
 
     let direction = "";
-    direction += diffY / distance >  0.5 ? "N" : "";
+    direction += diffY / distance > 0.5 ? "N" : "";
     direction += diffY / distance < -0.5 ? "S" : "";
-    direction += diffX / distance >  0.5 ? "W" : "";
+    direction += diffX / distance > 0.5 ? "W" : "";
     direction += diffX / distance < -0.5 ? "E" : "";
     if (direction === "") direction = "idle";
 
@@ -283,17 +352,16 @@
     nekoPosX -= (diffX / distance) * nekoSpeed;
     nekoPosY -= (diffY / distance) * nekoSpeed;
 
-    nekoPosX = Math.min(Math.max(16, nekoPosX), document.documentElement.scrollWidth  - 16);
+    nekoPosX = Math.min(Math.max(16, nekoPosX), document.documentElement.scrollWidth - 16);
     nekoPosY = Math.min(Math.max(16, nekoPosY), document.documentElement.scrollHeight - 16);
 
     nekoEl.style.left = `${nekoPosX - 16}px`;
-    nekoEl.style.top  = `${nekoPosY - 16}px`;
+    nekoEl.style.top = `${nekoPosY - 16}px`;
   }
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => init());
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", () => init());
   } else {
     init();
   }
-
 })();

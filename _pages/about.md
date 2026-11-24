@@ -27,23 +27,27 @@ latest_posts:
 ---
 
 ### Bio
+
 I'm a computer scientist and engineer focused on signal processing, computer science and applied mathematics. I hold a master's degree in **computer science** from the [Institut Polytechnique de Paris](https://www.ip-paris.fr/) given at [École Polytechnique](https://www.polytechnique.edu/) (Paris, FR), a French master of engineering in **telecommunications** from [Télécom SudParis](https://www.telecom-sudparis.eu/) (Paris, FR), and a bachelor's degree in **electrical engineering** (5-year program) from the [Federal University of Minas Gerais](https://www.ufmg.br/) (Belo Horizonte, BR). I also spent a term at the [University of Jyväskylä](https://www.jyu.fi/en) (Jyväskylä, FI) doing master-level courses at the computer science department.
 
 My main interests are in **mathematical computer science** 🌐🚀 (optimization, graphs, neural networks, high performance computing, ...), **signal processing** 📡🛰️ (filters, time series, images, radar, sensors, audio, ...) and the uses of **AI/ML** in these fields 🧠🧩.
 
 I study novel signal processing techniques and their applications in different environments, such as aviation, finance, radars, imaging and others.
 
-### Research interests 
- - Signal and statistical signal processing
- - Optimization
- - Neural networks / Machine learning / AI
- - Time series analysis and predictions
- - Stochastic processes
- - Compressive sensing and sparse models
- - High performance computing
+### Research interests
+
+- Signal and statistical signal processing
+- Optimization
+- Neural networks / Machine learning / AI
+- Time series analysis and predictions
+- Stochastic processes
+- Compressive sensing and sparse models
+- High performance computing
 
 ### Languages
+
 Fluent in English, French, Portuguese and Spanish.
 
 ### Personal interests
+
 I also play guitar as a hobby. 🎸🎶

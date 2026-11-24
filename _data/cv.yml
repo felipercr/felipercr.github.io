@@ -3,10 +3,6 @@ cv:
   email: felipercr.eng@gmail.com
   location: Belo Horizonte, BR
 
-  sections:
-    Summary:
-      - Computer science and engineer master specialized in signal processing, computer science and applied mathematics.
-
   #social_networks:
   #  - network: X
   #  - network: GitHub
@@ -49,7 +45,7 @@ cv:
 
       - institution: University of Jyväskylä
         location: Jyväskylä, Finland
-        url: https://www.jyu.fi/en 
+        url: https://www.jyu.fi/en
         area: Data science and AI
         studyType: Exchange period
         start_date: 2024
@@ -74,7 +70,7 @@ cv:
         start_date: 2026
         end_date: 2026
         highlights:
-          - Study and implementation of quantum cryptography's CV-QKD protocol. 
+          - Study and implementation of quantum cryptography's CV-QKD protocol.
           - GPU/CUDA implementations of signal processing algorithms (adaptive filters, channel equalizers, etc.) and linear error-correcting codes.
           - Real-time signal acquisition and processing.
 
@@ -96,8 +92,7 @@ cv:
         highlights:
           - Characterization of an FPI hyperspectral imaging camera for applications in space, such as asteroid analysis (after NASA’s dart mission).
           - Evaluation of the reliability of the camera’s technology (FPI) through an analysis of a large dataset of hyperspectral images.
-          - Presented in the 2024’s IEEE WHISPERS conference. Co-autor of "Lifetime Performance Analysis of a Hyperspectral Imager Based on a Piezoelectrically Tunable Fabry-Perot Interferometer".
-
+          - Presented in the 2024’s IEEE WHISPERS conference. Co-author of "Lifetime Performance Analysis of a Hyperspectral Imager Based on a Piezoelectrically Tunable Fabry-Perot Interferometer".
 
       - company: Metrum, Measuring and Testing Equipment
         position: R&D intern
@@ -128,7 +123,6 @@ cv:
           - Assist students on the Analysis of Dynamic Linear Systems course.
           - Explain concepts regarding signals, Fourier, Laplace and Z transforms, filters, dynamic systems, and more.
 
-
       - company: Nuclear Technology Development Center (CDTN)
         position: Research internship
         location: Belo Horizonte, Brazil
@@ -137,12 +131,12 @@ cv:
         highlights:
           - Data analysis of Monte Carlo simulation results from a nuclear reactor, and scripting of automated simulations and calculations.
           - Validation of a method for calculating error of stochastic neutronic simulations.
-          - Co-writer of “Investigation of discretization uncertainty in Monte Carlo neutron transport simulations of the Molten Salt Fast Reactor”.
+          - Co-author of “Investigation of discretization uncertainty in Monte Carlo neutron transport simulations of the Molten Salt Fast Reactor”.
 
     Volunteer:
       - company: IEEE's ICASSP conference
         position: Peer reviewer
-    #    location: Zurich, Switzerland
+        #    location: Zurich, Switzerland
         start_date: 2025
         end_date: present
         summary: Peer reviewer of Integrating signal processing and computing [AS-CMP] and Signal processing application systems [AS-APP].
