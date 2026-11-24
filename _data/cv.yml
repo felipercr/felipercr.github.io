@@ -1,10 +1,11 @@
 cv:
   name: Felipe Reis
-  label: R&D Engineer and Computer Scientist
   email: felipercr.eng@gmail.com
   location: Belo Horizonte, BR
-  image: ""
-  summary: A Brazilian-born engineer and computer scientist specialized in signal processing, computer science and applied mathematics.
+
+  sections:
+    Summary:
+      - Computer science and engineer master specialized in signal processing, computer science and applied mathematics.
 
   #social_networks:
   #  - network: X
